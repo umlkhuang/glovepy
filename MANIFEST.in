@@ -1,0 +1,3 @@
+include README.md
+include glovepy/glove_inner.pyx
+include glovepy/corpus_cython.pyx
