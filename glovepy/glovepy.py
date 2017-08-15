@@ -1,5 +1,9 @@
-import re, gzip, pickle, time
-from multiprocessing import Queue, Lock
+import re, gzip, time
+try:
+    # Python 2 compat
+    import cPickle as pickle
+except ImportError:
+    import pickle
 import threading
 import numpy as np
 import logging
@@ -7,7 +11,9 @@ import scipy
 import pyximport
 pyximport.install(setup_args={"include_dirs": np.get_include()})
 
+from multiprocessing import Queue, Lock, cpu_count
 from .glove_inner import train_glove
+
 
 try:
     # Python 2 compat
@@ -30,19 +36,22 @@ class Glove(object):
         self.seed            = seed
         np.random.seed(seed)
         self.W               = np.random.uniform(-0.5/d, 0.5/d, (cooccurence.shape[0], d)).astype(np.float64)
-        self.ContextW        = np.random.uniform(-0.5/d, 0.5/d, (cooccurence.shape[0], d)).astype(np.float64)
+        self.W_              = np.random.uniform(-0.5/d, 0.5/d, (cooccurence.shape[0], d)).astype(np.float64)
         self.b               = np.random.uniform(-0.5/d, 0.5/d, (cooccurence.shape[0], 1)).astype(np.float64)
-        self.ContextB        = np.random.uniform(-0.5/d, 0.5/d, (cooccurence.shape[0], 1)).astype(np.float64)
+        self.b_              = np.random.uniform(-0.5/d, 0.5/d, (cooccurence.shape[0], 1)).astype(np.float64)
         self.gradsqW         = np.ones_like(self.W, dtype=np.float64)
-        self.gradsqContextW  = np.ones_like(self.ContextW, dtype=np.float64)
+        self.gradsqW_        = np.ones_like(self.W_, dtype=np.float64)
         self.gradsqb         = np.ones_like(self.b, dtype=np.float64)
-        self.gradsqContextB  = np.ones_like(self.ContextB, dtype=np.float64)
+        self.gradsqb_        = np.ones_like(self.b_, dtype=np.float64)
         self.word2id         = None
         self.id2word         = None
         self.word_vectors    = None
 
 
-    def train(self, step_size=0.05, workers = 9, batch_size=50):
+    def train(self, step_size=0.05, workers = 1, batch_size=100):
+        """
+        One epoch run to fit the word embedding matrix.
+        """
         logger = logging.getLogger(__name__)
 
         jobs = Queue(maxsize=2 * workers)
@@ -148,16 +157,22 @@ class Glove(object):
 
     def fit(self, epochs=1, no_threads=1, step_size=0.05, batch_size=100):
         """
-        Fit a Glove model
+        Fit a Glove model with multiple epochs
         """
         logger = logging.getLogger(__name__)
+
+        if no_threads > cpu_count():
+            logger.warning("Threads number is more than CPU cores: %d, limited to the number of cores" % (cpu_count()))
+            use_cores = cpu_count()
+        else:
+            use_cores = no_threads
 
         if self.cooccurence is None:
             raise Exception('Model must be provided a cooccurence matrix')
             
         for epoch in range(epochs):
-            err = self.train(step_size=step_size, workers=no_threads, batch_size=batch_size)
-            logger.info("Epoch %d, error %.3f" % (epoch, err))
+            err = self.train(step_size=step_size, workers=use_cores, batch_size=batch_size)
+            logger.info("Epoch %d, error %.4f" % (epoch, err))
         
         self.word_vectors = self.W
 
@@ -167,7 +182,10 @@ class Glove(object):
         Get the norm of the word vectors
         """
         logger = logging.getLogger(__name__)
-        logger.info("precomputing L%d-norms of word weight vectors" % ord)
+        if ord is not None:
+            logger.info("Precomputing L%d-norms of word weight vectors" % ord)
+        else:
+            logger.info("Default precomputing L2-norms of word weight vectors")
 
         if ord is not None and ord == 2:
             ord = None # The is the default setting in numpy to indicate L2 norm
@@ -217,11 +235,39 @@ class Glove(object):
         """
         Deserialize model from filename
         """
-        instance = Glove(cooccurence=None)
+        instance = Glove(cooccurence=np.array([[]]))
 
         with open(filename, 'rb') as savefile:
             instance.__dict__ = pickle.load(savefile)
         
+
+    def unitvec(self, vec):
+        """
+        Scale a vector to unit length by applying L2-Norm.
+        if the input is a zero vector, it will return back unchanged.
+        """
+        if scipy.sparse.issparse(vec):
+            vec = vec.tocsr()
+            veclen = np.sqrt(np.sum(vec.data ** 2))
+            if veclen > 0.0:
+                return vec / veclen
+            else:
+                return vec
+        
+        if isinstance(vec, np.ndarray):
+            vec = np.asarray(vec, dtype=float)
+            veclen = np.linalg.norm(vec)
+            if veclen > 0.0:
+                return vec / veclen
+            else:
+                return vec
+        
+        try:
+            first = next(iter(vec)) # Is there at least one element?
+        except:
+            return vec
+        raise ValueError("unknown input type")
+
 
     def most_similar(self, positive=[], negative=[], topn=5, word_norm=None):
         """
@@ -233,8 +279,6 @@ class Glove(object):
         logger = logging.getLogger(__name__)
         if self.word_vectors is None:
             raise Exception('Model must be fit before adding a dictionary')
-        if len(dictionary) > self.word_vectors.shape[0]:
-            raise Exception('Dictionary length must be smaller or equal to the number of word vectors')
 
         if isinstance(positive, str) and not negative:
             # allow calls like most_similar('dog'), as a shorthand for most_similar(['dog'])
@@ -242,16 +286,16 @@ class Glove(object):
 
         # add weights for each word, if not already present; default to 1.0 for positive and -1.0 for negative words
         positive = [
-            (word, 1.0) if isinstance(word, (str, np.ndarray)) else word
-            for word in positive]
+            (word, 1.0) if isinstance(word, (str, np.ndarray)) else word for word in positive]
         negative = [
-            (word, -1.0) if isinstance(word, (str, np.ndarray)) else word
-            for word in negative]
+            (word, -1.0) if isinstance(word, (str, np.ndarray)) else word for word in negative]
         
         # Use L2-norms of the word weight vectors if provided
         if word_norm is not None:
+            logger.info("Provided normalized word embedding matrix")
             word_vec = word_norm
         else:
+            logger.info("Using default word embedding matrix")
             word_vec = self.word_vectors
 
         # compute the weighted average of all words
@@ -272,7 +316,7 @@ class Glove(object):
             mean = scipy.sparse.vstack(mean)
         else:
             mean = np.array(mean)
-        mean = gensim.matutils.unitvec(mean.mean(axis=0)).astype(word_vec.dtype)
+        mean = self.unitvec(mean.mean(axis=0)).astype(word_vec.dtype)
         dists = word_vec.dot(mean.T).flatten()
         if not topn:
             return dists
@@ -285,13 +329,99 @@ class Glove(object):
         return OrderedDict(result)
 
 
-    def most_similar_cosmul():
-        pass
+    def word_vec(self, word, word_vec):
+        """
+        Get the word embedding vector by giving a word.
+        """
+        if word in self.word2id:
+            return word_vec[self.word2id[word]]
+        else:
+            raise KeyError("word '%s' not in vocabulary" % word)
 
-    def similar_by_word():
-        pass
 
-    def doesnt_match():
-        pass
+    def most_similar_cosmul(self, positive=[], negative=[], topn=5, word_norm=None):
+        """
+        Find the top-N most similar words, using the multiplicative combination objective
+        proposed by Omer Levy and Yoav Goldberg. Positive words still contribute positive,
+        negative words contribute negatively towards the similarity, but with less
+        susceptibility to one large distance dominating the calculation.
+
+        `model.word_vectors` must be a matrix of word embeddings (need to be L2-normalized),
+        or a normalized matrix word_norm needs to be provided.
+
+        Original Paper:
+        Omer Levy and Yoav Goldberg. Linguistic Regularities in Sparse and Explicit Word Representations, 2014.
+        """
+        logger = logging.getLogger(__name__)
+        if self.word_vectors is None:
+            raise Exception('Model must be fit before adding a dictionary')
+
+        if isinstance(positive, str) and not negative:
+            # allow calls like most_similar('dog'), as a shorthand for most_similar(['dog'])
+            positive = [positive]
+        
+        all_words = set([self.word2id[word] for word in positive + negative
+            if not isinstance(word, np.ndarray) and word in self.word2id])
+
+        # Use L2-norms of the word weight vectors if provided
+        if word_norm is not None:
+            logger.info("Provided normalized word embedding matrix")
+            word_vec = word_norm
+        else:
+            logger.info("Using default normalized word embedding matrix")
+            word_vec = self.word_vectors
+        
+        # add weights for each word, if not already present; default to 1.0 for positive and -1.0 for negative words
+        positive = [
+            self.word_vec(word, word_vec) if isinstance(word, str) else word for word in positive]
+        negative = [
+            self.word_vec(word, word_vec) if isinstance(word, str) else word for word in negative]
+        
+        if not positive:
+            raise ValueError("cannot compute similarity with no input")
+        
+        # equation (4) of Levy & Goldberg "Linguistic Regularities...",
+        # with distances shifted to [0,1] per footnote (7)
+        pos_dists = [((1 + np.dot(word_vec, term)) / 2) for term in positive]
+        logger.debug("Positive distance: %s" % pos_dists)
+        neg_dists = [((1 + np.dot(word_vec, term)) / 2) for term in negative]
+        logger.debug("Negative distance: %s" % neg_dists)
+        dists = np.prod(pos_dists, axis=0) / (np.prod(neg_dists, axis=0) + 0.000001)
+        if not topn:
+            return dists
+
+        # Add more candidates in case the input words were in the results
+        best = np.argsort(dists)[::-1][:topn + len(all_words)]
+        # ignore (don't return) words from the input
+        result = [(model.id2word[sim], float(dists[sim])) for sim in best if sim not in all_words][:topn]
+        return OrderedDict(result)
+
+
+    def doesnt_match(self, words, word_norm=None):
+        """
+        Find out the word that does NOT similar to all other words in the given list.
+        """
+        logger = logging.getLogger(__name__)
+        if self.word_vectors is None:
+            raise Exception('Model must be fit before adding a dictionary')
+        
+        good_words = [word for word in words if word in self.word2id]
+        if len(good_words) != len(words):
+            ignored_words = set(words) - set(good_words)
+            logger.warning("Vectors for words %s are not present in the model, ignoring these words", ignored_words)
+        if not good_words:
+            raise ValueError("cannot select a word from an empty list")
+        
+        # Use L2-norms of the word weight vectors if provided
+        if word_norm is not None:
+            word_vec = word_norm
+        else:
+            word_vec = self.word_vectors
+        
+        vectors = np.vstack(self.word_vec(word, word_vec) for word in good_words).astype(word_vec.dtype)
+        mean = self.unitvec(vectors.mean(axis=0)).astype(word_vec.dtype)
+        dists = np.dot(vectors, mean)
+        return sorted(zip(dists, good_words))[0][1]
+        
 
 

@@ -14,5 +14,21 @@ The original implementation for this Machine Learning model can be [found here](
 
 ## Installation
 
-Install from the source code: `python setup.py install`.
+### Build on Windows
 
+If you are installing this package on Windows (tested on Windows 10), you will need to install Visual C++ 2015 Build Tools. If you have already installed Microsoft Visual Studio, you cannot install the Visual C++ Build Tools. It will ask you to uninstall your existing VS when you tried to install the Visual C++ build tools using the standalone installer. However, since you already have the VS, you can go to Control Panel—Programs and Features and right click the VS item and Change-Modify, then check the option of those components that relates to the Visual C++ Build Tools, like Visual C++, Windows SDD, then install them. Please also make sure the Build tools path has been added to the system path.
+
+Once you have the Visual C++ Build Tools, you can build the package as follows:
+
+```python
+python setup.py build_ext --inplace --compiler=msvc
+python setup.py install
+```
+
+### Linux
+
+Install from the source code:
+
+```python
+python setup.py install
+```
