@@ -15,7 +15,8 @@
         "language": "c++",
         "name": "glovepy.corpus_cython",
         "sources": [
-            "glovepy/corpus_cython.pyx"
+            "glovepy/corpus_cython.pyx",
+            "corpus_cython.cpp"
         ]
     },
     "module_name": "glovepy.corpus_cython"
@@ -821,7 +822,7 @@ struct __pyx_memoryview_obj;
 struct __pyx_memoryviewslice_obj;
 struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix;
 
-/* "glovepy/corpus_cython.pyx":41
+/* "glovepy/corpus_cython.pyx":43
  * 
  * 
  * cdef struct SparseRowMatrix:             # <<<<<<<<<<<<<<
@@ -1469,6 +1470,9 @@ static void __Pyx_CppExn2PyErr() {
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
+
 /* MemviewSliceCopyTemplate.proto */
 static __Pyx_memviewslice
 __pyx_memoryview_copy_new_contig(const __Pyx_memviewslice *from_mvs,
@@ -1481,9 +1485,6 @@ static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
-
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE char __Pyx_PyInt_As_char(PyObject *);
@@ -1544,6 +1545,7 @@ static PyObject *indirect_contiguous = 0;
 static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
 static CYTHON_INLINE int __pyx_f_7glovepy_13corpus_cython_int_min(int, int); /*proto*/
+static CYTHON_INLINE int __pyx_f_7glovepy_13corpus_cython_int_max(int, int); /*proto*/
 static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *, int, int, int, int); /*proto*/
 static struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix *__pyx_f_7glovepy_13corpus_cython_new_matrix(void); /*proto*/
 static void __pyx_f_7glovepy_13corpus_cython_free_matrix(struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix *); /*proto*/
@@ -1658,6 +1660,7 @@ static const char __pyx_k_wordslen[] = "wordslen";
 static const char __pyx_k_TypeError[] = "TypeError";
 static const char __pyx_k_enumerate[] = "enumerate";
 static const char __pyx_k_pyx_state[] = "__pyx_state";
+static const char __pyx_k_symmetric[] = "symmetric";
 static const char __pyx_k_IndexError[] = "IndexError";
 static const char __pyx_k_ValueError[] = "ValueError";
 static const char __pyx_k_coo_matrix[] = "coo_matrix";
@@ -1673,6 +1676,7 @@ static const char __pyx_k_window_stop[] = "window_stop";
 static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
 static const char __pyx_k_scipy_sparse[] = "scipy.sparse";
 static const char __pyx_k_stringsource[] = "stringsource";
+static const char __pyx_k_window_start[] = "window_start";
 static const char __pyx_k_pyx_getbuffer[] = "__pyx_getbuffer";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_ignore_missing[] = "ignore_missing";
@@ -1809,17 +1813,19 @@ static PyObject *__pyx_kp_s_strided_and_indirect;
 static PyObject *__pyx_kp_s_stringsource;
 static PyObject *__pyx_n_s_struct;
 static PyObject *__pyx_n_s_supplied;
+static PyObject *__pyx_n_s_symmetric;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_kp_s_unable_to_allocate_array_data;
 static PyObject *__pyx_kp_s_unable_to_allocate_shape_and_str;
 static PyObject *__pyx_n_s_unpack;
 static PyObject *__pyx_n_s_update;
 static PyObject *__pyx_n_s_window_size;
+static PyObject *__pyx_n_s_window_start;
 static PyObject *__pyx_n_s_window_stop;
 static PyObject *__pyx_n_s_word_ids;
 static PyObject *__pyx_n_s_words;
 static PyObject *__pyx_n_s_wordslen;
-static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_corpus, PyObject *__pyx_v_dictionary, int __pyx_v_supplied, int __pyx_v_window_size, int __pyx_v_ignore_missing); /* proto */
+static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_corpus, PyObject *__pyx_v_dictionary, int __pyx_v_supplied, int __pyx_v_window_size, int __pyx_v_ignore_missing, int __pyx_v_symmetric); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_array___pyx_pf_15View_dot_MemoryView_5array_4__dealloc__(struct __pyx_array_obj *__pyx_v_self); /* proto */
@@ -1899,11 +1905,11 @@ static PyObject *__pyx_tuple__29;
 static PyObject *__pyx_codeobj__23;
 static PyObject *__pyx_codeobj__30;
 
-/* "glovepy/corpus_cython.pyx":14
+/* "glovepy/corpus_cython.pyx":15
  * 
  * 
  * cdef inline int int_min(int a, int b) nogil: return a if a <= b else b             # <<<<<<<<<<<<<<
- * 
+ * cdef inline int int_max(int a, int b) nogil: return a if a >= b else b
  * 
  */
 
@@ -1923,7 +1929,31 @@ static CYTHON_INLINE int __pyx_f_7glovepy_13corpus_cython_int_min(int __pyx_v_a,
   return __pyx_r;
 }
 
-/* "glovepy/corpus_cython.pyx":17
+/* "glovepy/corpus_cython.pyx":16
+ * 
+ * cdef inline int int_min(int a, int b) nogil: return a if a <= b else b
+ * cdef inline int int_max(int a, int b) nogil: return a if a >= b else b             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+
+static CYTHON_INLINE int __pyx_f_7glovepy_13corpus_cython_int_max(int __pyx_v_a, int __pyx_v_b) {
+  int __pyx_r;
+  int __pyx_t_1;
+  if (((__pyx_v_a >= __pyx_v_b) != 0)) {
+    __pyx_t_1 = __pyx_v_a;
+  } else {
+    __pyx_t_1 = __pyx_v_b;
+  }
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+/* "glovepy/corpus_cython.pyx":19
  * 
  * 
  * cdef int binary_search(int* vec, int size, int first, int last, int x) nogil:             # <<<<<<<<<<<<<<
@@ -1936,7 +1966,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
   int __pyx_r;
   int __pyx_t_1;
 
-  /* "glovepy/corpus_cython.pyx":24
+  /* "glovepy/corpus_cython.pyx":26
  *     cdef int mid
  * 
  *     while (first < last):             # <<<<<<<<<<<<<<
@@ -1947,7 +1977,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
     __pyx_t_1 = ((__pyx_v_first < __pyx_v_last) != 0);
     if (!__pyx_t_1) break;
 
-    /* "glovepy/corpus_cython.pyx":25
+    /* "glovepy/corpus_cython.pyx":27
  * 
  *     while (first < last):
  *         mid = (first + last) / 2             # <<<<<<<<<<<<<<
@@ -1956,7 +1986,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
  */
     __pyx_v_mid = ((__pyx_v_first + __pyx_v_last) / 2);
 
-    /* "glovepy/corpus_cython.pyx":26
+    /* "glovepy/corpus_cython.pyx":28
  *     while (first < last):
  *         mid = (first + last) / 2
  *         if (vec[mid] == x):             # <<<<<<<<<<<<<<
@@ -1966,7 +1996,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
     __pyx_t_1 = (((__pyx_v_vec[__pyx_v_mid]) == __pyx_v_x) != 0);
     if (__pyx_t_1) {
 
-      /* "glovepy/corpus_cython.pyx":27
+      /* "glovepy/corpus_cython.pyx":29
  *         mid = (first + last) / 2
  *         if (vec[mid] == x):
  *             return mid             # <<<<<<<<<<<<<<
@@ -1976,7 +2006,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
       __pyx_r = __pyx_v_mid;
       goto __pyx_L0;
 
-      /* "glovepy/corpus_cython.pyx":26
+      /* "glovepy/corpus_cython.pyx":28
  *     while (first < last):
  *         mid = (first + last) / 2
  *         if (vec[mid] == x):             # <<<<<<<<<<<<<<
@@ -1985,7 +2015,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
  */
     }
 
-    /* "glovepy/corpus_cython.pyx":28
+    /* "glovepy/corpus_cython.pyx":30
  *         if (vec[mid] == x):
  *             return mid
  *         elif vec[mid] > x:             # <<<<<<<<<<<<<<
@@ -1995,7 +2025,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
     __pyx_t_1 = (((__pyx_v_vec[__pyx_v_mid]) > __pyx_v_x) != 0);
     if (__pyx_t_1) {
 
-      /* "glovepy/corpus_cython.pyx":29
+      /* "glovepy/corpus_cython.pyx":31
  *             return mid
  *         elif vec[mid] > x:
  *             last = mid - 1             # <<<<<<<<<<<<<<
@@ -2004,7 +2034,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
  */
       __pyx_v_last = (__pyx_v_mid - 1);
 
-      /* "glovepy/corpus_cython.pyx":28
+      /* "glovepy/corpus_cython.pyx":30
  *         if (vec[mid] == x):
  *             return mid
  *         elif vec[mid] > x:             # <<<<<<<<<<<<<<
@@ -2014,7 +2044,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
       goto __pyx_L5;
     }
 
-    /* "glovepy/corpus_cython.pyx":31
+    /* "glovepy/corpus_cython.pyx":33
  *             last = mid - 1
  *         else:
  *             first = mid + 1             # <<<<<<<<<<<<<<
@@ -2027,7 +2057,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
     __pyx_L5:;
   }
 
-  /* "glovepy/corpus_cython.pyx":33
+  /* "glovepy/corpus_cython.pyx":35
  *             first = mid + 1
  * 
  *     if (first == size):             # <<<<<<<<<<<<<<
@@ -2037,7 +2067,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
   __pyx_t_1 = ((__pyx_v_first == __pyx_v_size) != 0);
   if (__pyx_t_1) {
 
-    /* "glovepy/corpus_cython.pyx":34
+    /* "glovepy/corpus_cython.pyx":36
  * 
  *     if (first == size):
  *         return first             # <<<<<<<<<<<<<<
@@ -2047,7 +2077,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
     __pyx_r = __pyx_v_first;
     goto __pyx_L0;
 
-    /* "glovepy/corpus_cython.pyx":33
+    /* "glovepy/corpus_cython.pyx":35
  *             first = mid + 1
  * 
  *     if (first == size):             # <<<<<<<<<<<<<<
@@ -2056,7 +2086,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
  */
   }
 
-  /* "glovepy/corpus_cython.pyx":35
+  /* "glovepy/corpus_cython.pyx":37
  *     if (first == size):
  *         return first
  *     elif vec[first] > x:             # <<<<<<<<<<<<<<
@@ -2066,7 +2096,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
   __pyx_t_1 = (((__pyx_v_vec[__pyx_v_first]) > __pyx_v_x) != 0);
   if (__pyx_t_1) {
 
-    /* "glovepy/corpus_cython.pyx":36
+    /* "glovepy/corpus_cython.pyx":38
  *         return first
  *     elif vec[first] > x:
  *         return first             # <<<<<<<<<<<<<<
@@ -2076,7 +2106,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
     __pyx_r = __pyx_v_first;
     goto __pyx_L0;
 
-    /* "glovepy/corpus_cython.pyx":35
+    /* "glovepy/corpus_cython.pyx":37
  *     if (first == size):
  *         return first
  *     elif vec[first] > x:             # <<<<<<<<<<<<<<
@@ -2085,7 +2115,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
  */
   }
 
-  /* "glovepy/corpus_cython.pyx":38
+  /* "glovepy/corpus_cython.pyx":40
  *         return first
  *     else:
  *         return first + 1             # <<<<<<<<<<<<<<
@@ -2097,7 +2127,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
     goto __pyx_L0;
   }
 
-  /* "glovepy/corpus_cython.pyx":17
+  /* "glovepy/corpus_cython.pyx":19
  * 
  * 
  * cdef int binary_search(int* vec, int size, int first, int last, int x) nogil:             # <<<<<<<<<<<<<<
@@ -2110,7 +2140,7 @@ static int __pyx_f_7glovepy_13corpus_cython_binary_search(int *__pyx_v_vec, int 
   return __pyx_r;
 }
 
-/* "glovepy/corpus_cython.pyx":46
+/* "glovepy/corpus_cython.pyx":48
  * 
  * 
  * cdef SparseRowMatrix* new_matrix():             # <<<<<<<<<<<<<<
@@ -2127,7 +2157,7 @@ static struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix *__pyx_f_7glovepy
   std::vector<std::vector<float> >  *__pyx_t_3;
   __Pyx_RefNannySetupContext("new_matrix", 0);
 
-  /* "glovepy/corpus_cython.pyx":53
+  /* "glovepy/corpus_cython.pyx":55
  *     cdef SparseRowMatrix* mat
  * 
  *     mat = <SparseRowMatrix*>malloc(sizeof(SparseRowMatrix))             # <<<<<<<<<<<<<<
@@ -2136,7 +2166,7 @@ static struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix *__pyx_f_7glovepy
  */
   __pyx_v_mat = ((struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix *)malloc((sizeof(struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix))));
 
-  /* "glovepy/corpus_cython.pyx":55
+  /* "glovepy/corpus_cython.pyx":57
  *     mat = <SparseRowMatrix*>malloc(sizeof(SparseRowMatrix))
  * 
  *     if mat == NULL:             # <<<<<<<<<<<<<<
@@ -2146,16 +2176,16 @@ static struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix *__pyx_f_7glovepy
   __pyx_t_1 = ((__pyx_v_mat == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "glovepy/corpus_cython.pyx":56
+    /* "glovepy/corpus_cython.pyx":58
  * 
  *     if mat == NULL:
  *         raise MemoryError()             # <<<<<<<<<<<<<<
  * 
  *     mat.indices = new vector[vector[int]]()
  */
-    PyErr_NoMemory(); __PYX_ERR(0, 56, __pyx_L1_error)
+    PyErr_NoMemory(); __PYX_ERR(0, 58, __pyx_L1_error)
 
-    /* "glovepy/corpus_cython.pyx":55
+    /* "glovepy/corpus_cython.pyx":57
  *     mat = <SparseRowMatrix*>malloc(sizeof(SparseRowMatrix))
  * 
  *     if mat == NULL:             # <<<<<<<<<<<<<<
@@ -2164,7 +2194,7 @@ static struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix *__pyx_f_7glovepy
  */
   }
 
-  /* "glovepy/corpus_cython.pyx":58
+  /* "glovepy/corpus_cython.pyx":60
  *         raise MemoryError()
  * 
  *     mat.indices = new vector[vector[int]]()             # <<<<<<<<<<<<<<
@@ -2175,11 +2205,11 @@ static struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix *__pyx_f_7glovepy
     __pyx_t_2 = new std::vector<std::vector<int> > ();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(0, 58, __pyx_L1_error)
+    __PYX_ERR(0, 60, __pyx_L1_error)
   }
   __pyx_v_mat->indices = __pyx_t_2;
 
-  /* "glovepy/corpus_cython.pyx":59
+  /* "glovepy/corpus_cython.pyx":61
  * 
  *     mat.indices = new vector[vector[int]]()
  *     mat.data = new vector[vector[float]]()             # <<<<<<<<<<<<<<
@@ -2190,11 +2220,11 @@ static struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix *__pyx_f_7glovepy
     __pyx_t_3 = new std::vector<std::vector<float> > ();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(0, 59, __pyx_L1_error)
+    __PYX_ERR(0, 61, __pyx_L1_error)
   }
   __pyx_v_mat->data = __pyx_t_3;
 
-  /* "glovepy/corpus_cython.pyx":61
+  /* "glovepy/corpus_cython.pyx":63
  *     mat.data = new vector[vector[float]]()
  * 
  *     return mat             # <<<<<<<<<<<<<<
@@ -2204,7 +2234,7 @@ static struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix *__pyx_f_7glovepy
   __pyx_r = __pyx_v_mat;
   goto __pyx_L0;
 
-  /* "glovepy/corpus_cython.pyx":46
+  /* "glovepy/corpus_cython.pyx":48
  * 
  * 
  * cdef SparseRowMatrix* new_matrix():             # <<<<<<<<<<<<<<
@@ -2221,7 +2251,7 @@ static struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix *__pyx_f_7glovepy
   return __pyx_r;
 }
 
-/* "glovepy/corpus_cython.pyx":64
+/* "glovepy/corpus_cython.pyx":66
  * 
  * 
  * cdef void free_matrix(SparseRowMatrix* mat) nogil:             # <<<<<<<<<<<<<<
@@ -2235,7 +2265,7 @@ static void __pyx_f_7glovepy_13corpus_cython_free_matrix(struct __pyx_t_7glovepy
   int __pyx_t_1;
   int __pyx_t_2;
 
-  /* "glovepy/corpus_cython.pyx":70
+  /* "glovepy/corpus_cython.pyx":72
  * 
  *     cdef int i
  *     cdef int rows = mat.indices.size()             # <<<<<<<<<<<<<<
@@ -2244,7 +2274,7 @@ static void __pyx_f_7glovepy_13corpus_cython_free_matrix(struct __pyx_t_7glovepy
  */
   __pyx_v_rows = __pyx_v_mat->indices->size();
 
-  /* "glovepy/corpus_cython.pyx":72
+  /* "glovepy/corpus_cython.pyx":74
  *     cdef int rows = mat.indices.size()
  * 
  *     for i in range(rows):             # <<<<<<<<<<<<<<
@@ -2255,7 +2285,7 @@ static void __pyx_f_7glovepy_13corpus_cython_free_matrix(struct __pyx_t_7glovepy
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_i = __pyx_t_2;
 
-    /* "glovepy/corpus_cython.pyx":73
+    /* "glovepy/corpus_cython.pyx":75
  * 
  *     for i in range(rows):
  *         deref(mat.indices)[i].clear()             # <<<<<<<<<<<<<<
@@ -2264,7 +2294,7 @@ static void __pyx_f_7glovepy_13corpus_cython_free_matrix(struct __pyx_t_7glovepy
  */
     ((*__pyx_v_mat->indices)[__pyx_v_i]).clear();
 
-    /* "glovepy/corpus_cython.pyx":74
+    /* "glovepy/corpus_cython.pyx":76
  *     for i in range(rows):
  *         deref(mat.indices)[i].clear()
  *         deref(mat.data)[i].clear()             # <<<<<<<<<<<<<<
@@ -2274,7 +2304,7 @@ static void __pyx_f_7glovepy_13corpus_cython_free_matrix(struct __pyx_t_7glovepy
     ((*__pyx_v_mat->data)[__pyx_v_i]).clear();
   }
 
-  /* "glovepy/corpus_cython.pyx":76
+  /* "glovepy/corpus_cython.pyx":78
  *         deref(mat.data)[i].clear()
  * 
  *     del mat.indices             # <<<<<<<<<<<<<<
@@ -2283,7 +2313,7 @@ static void __pyx_f_7glovepy_13corpus_cython_free_matrix(struct __pyx_t_7glovepy
  */
   delete __pyx_v_mat->indices;
 
-  /* "glovepy/corpus_cython.pyx":77
+  /* "glovepy/corpus_cython.pyx":79
  * 
  *     del mat.indices
  *     del mat.data             # <<<<<<<<<<<<<<
@@ -2292,7 +2322,7 @@ static void __pyx_f_7glovepy_13corpus_cython_free_matrix(struct __pyx_t_7glovepy
  */
   delete __pyx_v_mat->data;
 
-  /* "glovepy/corpus_cython.pyx":79
+  /* "glovepy/corpus_cython.pyx":81
  *     del mat.data
  * 
  *     free(mat)             # <<<<<<<<<<<<<<
@@ -2301,7 +2331,7 @@ static void __pyx_f_7glovepy_13corpus_cython_free_matrix(struct __pyx_t_7glovepy
  */
   free(__pyx_v_mat);
 
-  /* "glovepy/corpus_cython.pyx":64
+  /* "glovepy/corpus_cython.pyx":66
  * 
  * 
  * cdef void free_matrix(SparseRowMatrix* mat) nogil:             # <<<<<<<<<<<<<<
@@ -2312,7 +2342,7 @@ static void __pyx_f_7glovepy_13corpus_cython_free_matrix(struct __pyx_t_7glovepy
   /* function exit code */
 }
 
-/* "glovepy/corpus_cython.pyx":82
+/* "glovepy/corpus_cython.pyx":84
  * 
  * 
  * cdef void increment_matrix(SparseRowMatrix* mat, int row, int col, float increment) nogil:             # <<<<<<<<<<<<<<
@@ -2329,7 +2359,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
   std::vector<int>  __pyx_t_2;
   std::vector<float>  __pyx_t_3;
 
-  /* "glovepy/corpus_cython.pyx":93
+  /* "glovepy/corpus_cython.pyx":95
  * 
  *     # Add new row if necessary
  *     while row >= mat.indices.size():             # <<<<<<<<<<<<<<
@@ -2340,7 +2370,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
     __pyx_t_1 = ((__pyx_v_row >= __pyx_v_mat->indices->size()) != 0);
     if (!__pyx_t_1) break;
 
-    /* "glovepy/corpus_cython.pyx":94
+    /* "glovepy/corpus_cython.pyx":96
  *     # Add new row if necessary
  *     while row >= mat.indices.size():
  *         mat.indices.push_back(vector[int]())             # <<<<<<<<<<<<<<
@@ -2357,7 +2387,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
       #ifdef WITH_THREAD
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
       #endif
-      __PYX_ERR(0, 94, __pyx_L1_error)
+      __PYX_ERR(0, 96, __pyx_L1_error)
     }
     try {
       __pyx_v_mat->indices->push_back(__pyx_t_2);
@@ -2369,10 +2399,10 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
       #ifdef WITH_THREAD
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
       #endif
-      __PYX_ERR(0, 94, __pyx_L1_error)
+      __PYX_ERR(0, 96, __pyx_L1_error)
     }
 
-    /* "glovepy/corpus_cython.pyx":95
+    /* "glovepy/corpus_cython.pyx":97
  *     while row >= mat.indices.size():
  *         mat.indices.push_back(vector[int]())
  *         mat.data.push_back(vector[float]())             # <<<<<<<<<<<<<<
@@ -2389,7 +2419,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
       #ifdef WITH_THREAD
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
       #endif
-      __PYX_ERR(0, 95, __pyx_L1_error)
+      __PYX_ERR(0, 97, __pyx_L1_error)
     }
     try {
       __pyx_v_mat->data->push_back(__pyx_t_3);
@@ -2401,11 +2431,11 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
       #ifdef WITH_THREAD
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
       #endif
-      __PYX_ERR(0, 95, __pyx_L1_error)
+      __PYX_ERR(0, 97, __pyx_L1_error)
     }
   }
 
-  /* "glovepy/corpus_cython.pyx":97
+  /* "glovepy/corpus_cython.pyx":99
  *         mat.data.push_back(vector[float]())
  * 
  *     row_indices = &(deref(mat.indices)[row])             # <<<<<<<<<<<<<<
@@ -2414,7 +2444,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
  */
   __pyx_v_row_indices = (&((*__pyx_v_mat->indices)[__pyx_v_row]));
 
-  /* "glovepy/corpus_cython.pyx":98
+  /* "glovepy/corpus_cython.pyx":100
  * 
  *     row_indices = &(deref(mat.indices)[row])
  *     row_data = &(deref(mat.data)[row])             # <<<<<<<<<<<<<<
@@ -2423,7 +2453,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
  */
   __pyx_v_row_data = (&((*__pyx_v_mat->data)[__pyx_v_row]));
 
-  /* "glovepy/corpus_cython.pyx":102
+  /* "glovepy/corpus_cython.pyx":104
  *     # Find the column element, or the position where
  *     # a new element should be inserted
  *     if row_indices.size() == 0:             # <<<<<<<<<<<<<<
@@ -2433,7 +2463,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
   __pyx_t_1 = ((__pyx_v_row_indices->size() == 0) != 0);
   if (__pyx_t_1) {
 
-    /* "glovepy/corpus_cython.pyx":103
+    /* "glovepy/corpus_cython.pyx":105
  *     # a new element should be inserted
  *     if row_indices.size() == 0:
  *         idx = 0             # <<<<<<<<<<<<<<
@@ -2442,7 +2472,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
  */
     __pyx_v_idx = 0;
 
-    /* "glovepy/corpus_cython.pyx":102
+    /* "glovepy/corpus_cython.pyx":104
  *     # Find the column element, or the position where
  *     # a new element should be inserted
  *     if row_indices.size() == 0:             # <<<<<<<<<<<<<<
@@ -2452,7 +2482,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
     goto __pyx_L5;
   }
 
-  /* "glovepy/corpus_cython.pyx":105
+  /* "glovepy/corpus_cython.pyx":107
  *         idx = 0
  *     else:
  *         idx = binary_search(&(deref(row_indices)[0]), row_indices.size(),             # <<<<<<<<<<<<<<
@@ -2461,7 +2491,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
  */
   /*else*/ {
 
-    /* "glovepy/corpus_cython.pyx":106
+    /* "glovepy/corpus_cython.pyx":108
  *     else:
  *         idx = binary_search(&(deref(row_indices)[0]), row_indices.size(),
  *                             0, row_indices.size(), col)             # <<<<<<<<<<<<<<
@@ -2472,7 +2502,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
   }
   __pyx_L5:;
 
-  /* "glovepy/corpus_cython.pyx":109
+  /* "glovepy/corpus_cython.pyx":111
  * 
  *     # Element to be added at the end
  *     if idx == row_indices.size():             # <<<<<<<<<<<<<<
@@ -2482,7 +2512,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
   __pyx_t_1 = ((__pyx_v_idx == __pyx_v_row_indices->size()) != 0);
   if (__pyx_t_1) {
 
-    /* "glovepy/corpus_cython.pyx":110
+    /* "glovepy/corpus_cython.pyx":112
  *     # Element to be added at the end
  *     if idx == row_indices.size():
  *         row_indices.insert(row_indices.begin() + idx, col)             # <<<<<<<<<<<<<<
@@ -2499,10 +2529,10 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
       #ifdef WITH_THREAD
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
       #endif
-      __PYX_ERR(0, 110, __pyx_L1_error)
+      __PYX_ERR(0, 112, __pyx_L1_error)
     }
 
-    /* "glovepy/corpus_cython.pyx":111
+    /* "glovepy/corpus_cython.pyx":113
  *     if idx == row_indices.size():
  *         row_indices.insert(row_indices.begin() + idx, col)
  *         row_data.insert(row_data.begin() + idx, increment)             # <<<<<<<<<<<<<<
@@ -2519,10 +2549,10 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
       #ifdef WITH_THREAD
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
       #endif
-      __PYX_ERR(0, 111, __pyx_L1_error)
+      __PYX_ERR(0, 113, __pyx_L1_error)
     }
 
-    /* "glovepy/corpus_cython.pyx":112
+    /* "glovepy/corpus_cython.pyx":114
  *         row_indices.insert(row_indices.begin() + idx, col)
  *         row_data.insert(row_data.begin() + idx, increment)
  *         return             # <<<<<<<<<<<<<<
@@ -2531,7 +2561,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
  */
     goto __pyx_L0;
 
-    /* "glovepy/corpus_cython.pyx":109
+    /* "glovepy/corpus_cython.pyx":111
  * 
  *     # Element to be added at the end
  *     if idx == row_indices.size():             # <<<<<<<<<<<<<<
@@ -2540,7 +2570,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
  */
   }
 
-  /* "glovepy/corpus_cython.pyx":114
+  /* "glovepy/corpus_cython.pyx":116
  *         return
  * 
  *     col_at_idx = deref(row_indices)[idx]             # <<<<<<<<<<<<<<
@@ -2549,7 +2579,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
  */
   __pyx_v_col_at_idx = ((*__pyx_v_row_indices)[__pyx_v_idx]);
 
-  /* "glovepy/corpus_cython.pyx":116
+  /* "glovepy/corpus_cython.pyx":118
  *     col_at_idx = deref(row_indices)[idx]
  * 
  *     if col_at_idx == col:             # <<<<<<<<<<<<<<
@@ -2559,7 +2589,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
   __pyx_t_1 = ((__pyx_v_col_at_idx == __pyx_v_col) != 0);
   if (__pyx_t_1) {
 
-    /* "glovepy/corpus_cython.pyx":118
+    /* "glovepy/corpus_cython.pyx":120
  *     if col_at_idx == col:
  *         # Element to be incremented
  *         deref(row_data)[idx] = deref(row_data)[idx] + increment             # <<<<<<<<<<<<<<
@@ -2568,7 +2598,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
  */
     ((*__pyx_v_row_data)[__pyx_v_idx]) = (((*__pyx_v_row_data)[__pyx_v_idx]) + __pyx_v_increment);
 
-    /* "glovepy/corpus_cython.pyx":116
+    /* "glovepy/corpus_cython.pyx":118
  *     col_at_idx = deref(row_indices)[idx]
  * 
  *     if col_at_idx == col:             # <<<<<<<<<<<<<<
@@ -2578,7 +2608,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
     goto __pyx_L7;
   }
 
-  /* "glovepy/corpus_cython.pyx":121
+  /* "glovepy/corpus_cython.pyx":123
  *     else:
  *         # Element to be inserted
  *         row_indices.insert(row_indices.begin() + idx, col)             # <<<<<<<<<<<<<<
@@ -2596,10 +2626,10 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
       #ifdef WITH_THREAD
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
       #endif
-      __PYX_ERR(0, 121, __pyx_L1_error)
+      __PYX_ERR(0, 123, __pyx_L1_error)
     }
 
-    /* "glovepy/corpus_cython.pyx":122
+    /* "glovepy/corpus_cython.pyx":124
  *         # Element to be inserted
  *         row_indices.insert(row_indices.begin() + idx, col)
  *         row_data.insert(row_data.begin() + idx, increment)             # <<<<<<<<<<<<<<
@@ -2616,12 +2646,12 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
       #ifdef WITH_THREAD
       __Pyx_PyGILState_Release(__pyx_gilstate_save);
       #endif
-      __PYX_ERR(0, 122, __pyx_L1_error)
+      __PYX_ERR(0, 124, __pyx_L1_error)
     }
   }
   __pyx_L7:;
 
-  /* "glovepy/corpus_cython.pyx":82
+  /* "glovepy/corpus_cython.pyx":84
  * 
  * 
  * cdef void increment_matrix(SparseRowMatrix* mat, int row, int col, float increment) nogil:             # <<<<<<<<<<<<<<
@@ -2636,7 +2666,7 @@ static void __pyx_f_7glovepy_13corpus_cython_increment_matrix(struct __pyx_t_7gl
   __pyx_L0:;
 }
 
-/* "glovepy/corpus_cython.pyx":125
+/* "glovepy/corpus_cython.pyx":127
  * 
  * 
  * cdef int matrix_nnz(SparseRowMatrix* mat) nogil:             # <<<<<<<<<<<<<<
@@ -2651,7 +2681,7 @@ static int __pyx_f_7glovepy_13corpus_cython_matrix_nnz(struct __pyx_t_7glovepy_1
   std::vector<std::vector<int> > ::size_type __pyx_t_1;
   int __pyx_t_2;
 
-  /* "glovepy/corpus_cython.pyx":131
+  /* "glovepy/corpus_cython.pyx":133
  * 
  *     cdef int i
  *     cdef int size = 0             # <<<<<<<<<<<<<<
@@ -2660,7 +2690,7 @@ static int __pyx_f_7glovepy_13corpus_cython_matrix_nnz(struct __pyx_t_7glovepy_1
  */
   __pyx_v_size = 0;
 
-  /* "glovepy/corpus_cython.pyx":133
+  /* "glovepy/corpus_cython.pyx":135
  *     cdef int size = 0
  * 
  *     for i in range(mat.indices.size()):             # <<<<<<<<<<<<<<
@@ -2671,7 +2701,7 @@ static int __pyx_f_7glovepy_13corpus_cython_matrix_nnz(struct __pyx_t_7glovepy_1
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_i = __pyx_t_2;
 
-    /* "glovepy/corpus_cython.pyx":134
+    /* "glovepy/corpus_cython.pyx":136
  * 
  *     for i in range(mat.indices.size()):
  *         size += deref(mat.indices)[i].size()             # <<<<<<<<<<<<<<
@@ -2681,7 +2711,7 @@ static int __pyx_f_7glovepy_13corpus_cython_matrix_nnz(struct __pyx_t_7glovepy_1
     __pyx_v_size = (__pyx_v_size + ((*__pyx_v_mat->indices)[__pyx_v_i]).size());
   }
 
-  /* "glovepy/corpus_cython.pyx":136
+  /* "glovepy/corpus_cython.pyx":138
  *         size += deref(mat.indices)[i].size()
  * 
  *     return size             # <<<<<<<<<<<<<<
@@ -2691,7 +2721,7 @@ static int __pyx_f_7glovepy_13corpus_cython_matrix_nnz(struct __pyx_t_7glovepy_1
   __pyx_r = __pyx_v_size;
   goto __pyx_L0;
 
-  /* "glovepy/corpus_cython.pyx":125
+  /* "glovepy/corpus_cython.pyx":127
  * 
  * 
  * cdef int matrix_nnz(SparseRowMatrix* mat) nogil:             # <<<<<<<<<<<<<<
@@ -2704,7 +2734,7 @@ static int __pyx_f_7glovepy_13corpus_cython_matrix_nnz(struct __pyx_t_7glovepy_1
   return __pyx_r;
 }
 
-/* "glovepy/corpus_cython.pyx":139
+/* "glovepy/corpus_cython.pyx":141
  * 
  * 
  * cdef matrix_to_coo(SparseRowMatrix* mat, int shape):             # <<<<<<<<<<<<<<
@@ -2743,7 +2773,7 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
   PyObject *__pyx_t_15 = NULL;
   __Pyx_RefNannySetupContext("matrix_to_coo", 0);
 
-  /* "glovepy/corpus_cython.pyx":147
+  /* "glovepy/corpus_cython.pyx":149
  *     cdef int row
  *     cdef int col
  *     cdef int rows = mat.indices.size()             # <<<<<<<<<<<<<<
@@ -2752,7 +2782,7 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
  */
   __pyx_v_rows = __pyx_v_mat->indices->size();
 
-  /* "glovepy/corpus_cython.pyx":148
+  /* "glovepy/corpus_cython.pyx":150
  *     cdef int col
  *     cdef int rows = mat.indices.size()
  *     cdef int no_collocations = matrix_nnz(mat)             # <<<<<<<<<<<<<<
@@ -2761,35 +2791,35 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
  */
   __pyx_v_no_collocations = __pyx_f_7glovepy_13corpus_cython_matrix_nnz(__pyx_v_mat);
 
-  /* "glovepy/corpus_cython.pyx":151
+  /* "glovepy/corpus_cython.pyx":153
  * 
  *     # Create the constituent numpy arrays.
  *     row_np = np.empty(no_collocations, dtype=np.int32)             # <<<<<<<<<<<<<<
  *     col_np = np.empty(no_collocations, dtype=np.int32)
  *     data_np = np.empty(no_collocations, dtype=np.float64)
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 153, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 153, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_no_collocations); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_no_collocations); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 153, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 153, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 153, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 153, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 153, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_5) < 0) __PYX_ERR(0, 151, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_5) < 0) __PYX_ERR(0, 153, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 153, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -2797,35 +2827,35 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
   __pyx_v_row_np = __pyx_t_5;
   __pyx_t_5 = 0;
 
-  /* "glovepy/corpus_cython.pyx":152
+  /* "glovepy/corpus_cython.pyx":154
  *     # Create the constituent numpy arrays.
  *     row_np = np.empty(no_collocations, dtype=np.int32)
  *     col_np = np.empty(no_collocations, dtype=np.int32)             # <<<<<<<<<<<<<<
  *     data_np = np.empty(no_collocations, dtype=np.float64)
  *     cdef int[:] row_view = row_np
  */
-  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_empty); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_empty); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_no_collocations); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_no_collocations); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_5);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_5);
   __pyx_t_5 = 0;
-  __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_5 = PyDict_New(); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_int32); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_int32); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 152, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -2833,35 +2863,35 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
   __pyx_v_col_np = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "glovepy/corpus_cython.pyx":153
+  /* "glovepy/corpus_cython.pyx":155
  *     row_np = np.empty(no_collocations, dtype=np.int32)
  *     col_np = np.empty(no_collocations, dtype=np.int32)
  *     data_np = np.empty(no_collocations, dtype=np.float64)             # <<<<<<<<<<<<<<
  *     cdef int[:] row_view = row_np
  *     cdef int[:] col_view = col_np
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_empty); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_empty); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_no_collocations); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_no_collocations); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4);
   __pyx_t_4 = 0;
-  __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_2) < 0) __PYX_ERR(0, 153, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_2) < 0) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 155, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -2869,7 +2899,7 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
   __pyx_v_data_np = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "glovepy/corpus_cython.pyx":154
+  /* "glovepy/corpus_cython.pyx":156
  *     col_np = np.empty(no_collocations, dtype=np.int32)
  *     data_np = np.empty(no_collocations, dtype=np.float64)
  *     cdef int[:] row_view = row_np             # <<<<<<<<<<<<<<
@@ -2877,12 +2907,12 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
  *     cdef double[:] data_view = data_np
  */
   __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(__pyx_v_row_np);
-  if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 154, __pyx_L1_error)
+  if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 156, __pyx_L1_error)
   __pyx_v_row_view = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "glovepy/corpus_cython.pyx":155
+  /* "glovepy/corpus_cython.pyx":157
  *     data_np = np.empty(no_collocations, dtype=np.float64)
  *     cdef int[:] row_view = row_np
  *     cdef int[:] col_view = col_np             # <<<<<<<<<<<<<<
@@ -2890,12 +2920,12 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
  * 
  */
   __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(__pyx_v_col_np);
-  if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 155, __pyx_L1_error)
+  if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 157, __pyx_L1_error)
   __pyx_v_col_view = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "glovepy/corpus_cython.pyx":156
+  /* "glovepy/corpus_cython.pyx":158
  *     cdef int[:] row_view = row_np
  *     cdef int[:] col_view = col_np
  *     cdef double[:] data_view = data_np             # <<<<<<<<<<<<<<
@@ -2903,12 +2933,12 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
  *     j = 0
  */
   __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_double(__pyx_v_data_np);
-  if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 156, __pyx_L1_error)
+  if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 158, __pyx_L1_error)
   __pyx_v_data_view = __pyx_t_7;
   __pyx_t_7.memview = NULL;
   __pyx_t_7.data = NULL;
 
-  /* "glovepy/corpus_cython.pyx":158
+  /* "glovepy/corpus_cython.pyx":160
  *     cdef double[:] data_view = data_np
  * 
  *     j = 0             # <<<<<<<<<<<<<<
@@ -2917,7 +2947,7 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
  */
   __pyx_v_j = 0;
 
-  /* "glovepy/corpus_cython.pyx":160
+  /* "glovepy/corpus_cython.pyx":162
  *     j = 0
  * 
  *     for row in range(rows):             # <<<<<<<<<<<<<<
@@ -2928,7 +2958,7 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
   for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
     __pyx_v_row = __pyx_t_9;
 
-    /* "glovepy/corpus_cython.pyx":161
+    /* "glovepy/corpus_cython.pyx":163
  * 
  *     for row in range(rows):
  *         for i in range(deref(mat.indices)[row].size()):             # <<<<<<<<<<<<<<
@@ -2939,7 +2969,7 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
     for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_10; __pyx_t_11+=1) {
       __pyx_v_i = __pyx_t_11;
 
-      /* "glovepy/corpus_cython.pyx":163
+      /* "glovepy/corpus_cython.pyx":165
  *         for i in range(deref(mat.indices)[row].size()):
  * 
  *             row_view[j] = row             # <<<<<<<<<<<<<<
@@ -2949,7 +2979,7 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
       __pyx_t_12 = __pyx_v_j;
       *((int *) ( /* dim=0 */ (__pyx_v_row_view.data + __pyx_t_12 * __pyx_v_row_view.strides[0]) )) = __pyx_v_row;
 
-      /* "glovepy/corpus_cython.pyx":164
+      /* "glovepy/corpus_cython.pyx":166
  * 
  *             row_view[j] = row
  *             col_view[j] = deref(mat.indices)[row][i]             # <<<<<<<<<<<<<<
@@ -2959,7 +2989,7 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
       __pyx_t_13 = __pyx_v_j;
       *((int *) ( /* dim=0 */ (__pyx_v_col_view.data + __pyx_t_13 * __pyx_v_col_view.strides[0]) )) = (((*__pyx_v_mat->indices)[__pyx_v_row])[__pyx_v_i]);
 
-      /* "glovepy/corpus_cython.pyx":165
+      /* "glovepy/corpus_cython.pyx":167
  *             row_view[j] = row
  *             col_view[j] = deref(mat.indices)[row][i]
  *             data_view[j] = deref(mat.data)[row][i]             # <<<<<<<<<<<<<<
@@ -2969,7 +2999,7 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
       __pyx_t_14 = __pyx_v_j;
       *((double *) ( /* dim=0 */ (__pyx_v_data_view.data + __pyx_t_14 * __pyx_v_data_view.strides[0]) )) = (((*__pyx_v_mat->data)[__pyx_v_row])[__pyx_v_i]);
 
-      /* "glovepy/corpus_cython.pyx":167
+      /* "glovepy/corpus_cython.pyx":169
  *             data_view[j] = deref(mat.data)[row][i]
  * 
  *             j += 1             # <<<<<<<<<<<<<<
@@ -2980,7 +3010,7 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
     }
   }
 
-  /* "glovepy/corpus_cython.pyx":170
+  /* "glovepy/corpus_cython.pyx":172
  * 
  *     # Create and return the matrix.
  *     return sp.coo_matrix((data_np, (row_np, col_np)),             # <<<<<<<<<<<<<<
@@ -2988,12 +3018,12 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
  *                                 shape),
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_sp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 170, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_sp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_coo_matrix); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 170, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_coo_matrix); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 170, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_row_np);
   __Pyx_GIVEREF(__pyx_v_row_np);
@@ -3001,7 +3031,7 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
   __Pyx_INCREF(__pyx_v_col_np);
   __Pyx_GIVEREF(__pyx_v_col_np);
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_v_col_np);
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 170, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_v_data_np);
   __Pyx_GIVEREF(__pyx_v_data_np);
@@ -3009,42 +3039,42 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 170, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_3);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "glovepy/corpus_cython.pyx":171
+  /* "glovepy/corpus_cython.pyx":173
  *     # Create and return the matrix.
  *     return sp.coo_matrix((data_np, (row_np, col_np)),
  *                          shape=(shape,             # <<<<<<<<<<<<<<
  *                                 shape),
  *                          dtype=np.float64)
  */
-  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_shape); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_shape); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
 
-  /* "glovepy/corpus_cython.pyx":172
+  /* "glovepy/corpus_cython.pyx":174
  *     return sp.coo_matrix((data_np, (row_np, col_np)),
  *                          shape=(shape,
  *                                 shape),             # <<<<<<<<<<<<<<
  *                          dtype=np.float64)
  * 
  */
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 174, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "glovepy/corpus_cython.pyx":171
+  /* "glovepy/corpus_cython.pyx":173
  *     # Create and return the matrix.
  *     return sp.coo_matrix((data_np, (row_np, col_np)),
  *                          shape=(shape,             # <<<<<<<<<<<<<<
  *                                 shape),
  *                          dtype=np.float64)
  */
-  __pyx_t_15 = PyTuple_New(2); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __pyx_t_15 = PyTuple_New(2); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_15);
   __Pyx_GIVEREF(__pyx_t_5);
   PyTuple_SET_ITEM(__pyx_t_15, 0, __pyx_t_5);
@@ -3052,32 +3082,32 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
   PyTuple_SET_ITEM(__pyx_t_15, 1, __pyx_t_1);
   __pyx_t_5 = 0;
   __pyx_t_1 = 0;
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_shape, __pyx_t_15) < 0) __PYX_ERR(0, 171, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_shape, __pyx_t_15) < 0) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
 
-  /* "glovepy/corpus_cython.pyx":173
+  /* "glovepy/corpus_cython.pyx":175
  *                          shape=(shape,
  *                                 shape),
  *                          dtype=np.float64)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_15 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 173, __pyx_L1_error)
+  __pyx_t_15 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 175, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_15);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_15, __pyx_n_s_float64); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 173, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_15, __pyx_n_s_float64); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, __pyx_t_1) < 0) __PYX_ERR(0, 171, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, __pyx_t_1) < 0) __PYX_ERR(0, 173, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/corpus_cython.pyx":170
+  /* "glovepy/corpus_cython.pyx":172
  * 
  *     # Create and return the matrix.
  *     return sp.coo_matrix((data_np, (row_np, col_np)),             # <<<<<<<<<<<<<<
  *                          shape=(shape,
  *                                 shape),
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 170, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -3086,7 +3116,7 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "glovepy/corpus_cython.pyx":139
+  /* "glovepy/corpus_cython.pyx":141
  * 
  * 
  * cdef matrix_to_coo(SparseRowMatrix* mat, int shape):             # <<<<<<<<<<<<<<
@@ -3118,7 +3148,7 @@ static PyObject *__pyx_f_7glovepy_13corpus_cython_matrix_to_coo(struct __pyx_t_7
   return __pyx_r;
 }
 
-/* "glovepy/corpus_cython.pyx":176
+/* "glovepy/corpus_cython.pyx":178
  * 
  * 
  * cdef int words_to_ids(list words, vector[int]& word_ids,             # <<<<<<<<<<<<<<
@@ -3144,7 +3174,7 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
   PyObject *__pyx_t_11 = NULL;
   __Pyx_RefNannySetupContext("words_to_ids", 0);
 
-  /* "glovepy/corpus_cython.pyx":195
+  /* "glovepy/corpus_cython.pyx":197
  *     cdef int word_id
  * 
  *     word_ids.resize(0)             # <<<<<<<<<<<<<<
@@ -3155,10 +3185,10 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
     __pyx_v_word_ids.resize(0);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(0, 195, __pyx_L1_error)
+    __PYX_ERR(0, 197, __pyx_L1_error)
   }
 
-  /* "glovepy/corpus_cython.pyx":197
+  /* "glovepy/corpus_cython.pyx":199
  *     word_ids.resize(0)
  * 
  *     if supplied == 1:             # <<<<<<<<<<<<<<
@@ -3168,7 +3198,7 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
   __pyx_t_1 = ((__pyx_v_supplied == 1) != 0);
   if (__pyx_t_1) {
 
-    /* "glovepy/corpus_cython.pyx":198
+    /* "glovepy/corpus_cython.pyx":200
  * 
  *     if supplied == 1:
  *         for word in words:             # <<<<<<<<<<<<<<
@@ -3177,28 +3207,28 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
  */
     if (unlikely(__pyx_v_words == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 198, __pyx_L1_error)
+      __PYX_ERR(0, 200, __pyx_L1_error)
     }
     __pyx_t_2 = __pyx_v_words; __Pyx_INCREF(__pyx_t_2); __pyx_t_3 = 0;
     for (;;) {
       if (__pyx_t_3 >= PyList_GET_SIZE(__pyx_t_2)) break;
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-      __pyx_t_4 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_4); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 198, __pyx_L1_error)
+      __pyx_t_4 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_4); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 200, __pyx_L1_error)
       #else
-      __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 198, __pyx_L1_error)
+      __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 200, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       #endif
       __Pyx_XDECREF_SET(__pyx_v_word, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "glovepy/corpus_cython.pyx":202
+      /* "glovepy/corpus_cython.pyx":204
  *             # is missing from the supplied
  *             # dictionary.
  *             word_id = dictionary.get(word, -1)             # <<<<<<<<<<<<<<
  *             if word_id == -1 and ignore_missing == 0:
  *                 return -1
  */
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_dictionary, __pyx_n_s_get); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 202, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_dictionary, __pyx_n_s_get); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 204, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __pyx_t_6 = NULL;
       __pyx_t_7 = 0;
@@ -3215,7 +3245,7 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_v_word, __pyx_int_neg_1};
-        __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 202, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 204, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_4);
       } else
@@ -3223,13 +3253,13 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_v_word, __pyx_int_neg_1};
-        __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 202, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 204, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_4);
       } else
       #endif
       {
-        __pyx_t_8 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 202, __pyx_L1_error)
+        __pyx_t_8 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 204, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_8);
         if (__pyx_t_6) {
           __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -3240,16 +3270,16 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
         __Pyx_INCREF(__pyx_int_neg_1);
         __Pyx_GIVEREF(__pyx_int_neg_1);
         PyTuple_SET_ITEM(__pyx_t_8, 1+__pyx_t_7, __pyx_int_neg_1);
-        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_8, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 202, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_8, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 204, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       }
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 202, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_v_word_id = __pyx_t_7;
 
-      /* "glovepy/corpus_cython.pyx":203
+      /* "glovepy/corpus_cython.pyx":205
  *             # dictionary.
  *             word_id = dictionary.get(word, -1)
  *             if word_id == -1 and ignore_missing == 0:             # <<<<<<<<<<<<<<
@@ -3267,7 +3297,7 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
       __pyx_L7_bool_binop_done:;
       if (__pyx_t_1) {
 
-        /* "glovepy/corpus_cython.pyx":204
+        /* "glovepy/corpus_cython.pyx":206
  *             word_id = dictionary.get(word, -1)
  *             if word_id == -1 and ignore_missing == 0:
  *                 return -1             # <<<<<<<<<<<<<<
@@ -3278,7 +3308,7 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         goto __pyx_L0;
 
-        /* "glovepy/corpus_cython.pyx":203
+        /* "glovepy/corpus_cython.pyx":205
  *             # dictionary.
  *             word_id = dictionary.get(word, -1)
  *             if word_id == -1 and ignore_missing == 0:             # <<<<<<<<<<<<<<
@@ -3287,7 +3317,7 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
  */
       }
 
-      /* "glovepy/corpus_cython.pyx":206
+      /* "glovepy/corpus_cython.pyx":208
  *                 return -1
  * 
  *             word_ids.push_back(word_id)             # <<<<<<<<<<<<<<
@@ -3298,10 +3328,10 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
         __pyx_v_word_ids.push_back(__pyx_v_word_id);
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(0, 206, __pyx_L1_error)
+        __PYX_ERR(0, 208, __pyx_L1_error)
       }
 
-      /* "glovepy/corpus_cython.pyx":198
+      /* "glovepy/corpus_cython.pyx":200
  * 
  *     if supplied == 1:
  *         for word in words:             # <<<<<<<<<<<<<<
@@ -3311,7 +3341,7 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
     }
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "glovepy/corpus_cython.pyx":197
+    /* "glovepy/corpus_cython.pyx":199
  *     word_ids.resize(0)
  * 
  *     if supplied == 1:             # <<<<<<<<<<<<<<
@@ -3321,7 +3351,7 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
     goto __pyx_L3;
   }
 
-  /* "glovepy/corpus_cython.pyx":209
+  /* "glovepy/corpus_cython.pyx":211
  * 
  *     else:
  *         for word in words:             # <<<<<<<<<<<<<<
@@ -3331,39 +3361,39 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
   /*else*/ {
     if (unlikely(__pyx_v_words == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 209, __pyx_L1_error)
+      __PYX_ERR(0, 211, __pyx_L1_error)
     }
     __pyx_t_2 = __pyx_v_words; __Pyx_INCREF(__pyx_t_2); __pyx_t_3 = 0;
     for (;;) {
       if (__pyx_t_3 >= PyList_GET_SIZE(__pyx_t_2)) break;
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-      __pyx_t_4 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_4); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 209, __pyx_L1_error)
+      __pyx_t_4 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_4); __pyx_t_3++; if (unlikely(0 < 0)) __PYX_ERR(0, 211, __pyx_L1_error)
       #else
-      __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 209, __pyx_L1_error)
+      __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 211, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       #endif
       __Pyx_XDECREF_SET(__pyx_v_word, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "glovepy/corpus_cython.pyx":210
+      /* "glovepy/corpus_cython.pyx":212
  *     else:
  *         for word in words:
  *             word_id = dictionary.setdefault(word,             # <<<<<<<<<<<<<<
  *                                             len(dictionary))
  *             word_ids.push_back(word_id)
  */
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_dictionary, __pyx_n_s_setdefault); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 210, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_dictionary, __pyx_n_s_setdefault); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 212, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
 
-      /* "glovepy/corpus_cython.pyx":211
+      /* "glovepy/corpus_cython.pyx":213
  *         for word in words:
  *             word_id = dictionary.setdefault(word,
  *                                             len(dictionary))             # <<<<<<<<<<<<<<
  *             word_ids.push_back(word_id)
  * 
  */
-      __pyx_t_10 = PyObject_Length(__pyx_v_dictionary); if (unlikely(__pyx_t_10 == -1)) __PYX_ERR(0, 211, __pyx_L1_error)
-      __pyx_t_8 = PyInt_FromSsize_t(__pyx_t_10); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 211, __pyx_L1_error)
+      __pyx_t_10 = PyObject_Length(__pyx_v_dictionary); if (unlikely(__pyx_t_10 == -1)) __PYX_ERR(0, 213, __pyx_L1_error)
+      __pyx_t_8 = PyInt_FromSsize_t(__pyx_t_10); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 213, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       __pyx_t_6 = NULL;
       __pyx_t_7 = 0;
@@ -3380,7 +3410,7 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_v_word, __pyx_t_8};
-        __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 210, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 212, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -3389,14 +3419,14 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_v_word, __pyx_t_8};
-        __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 210, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 212, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       } else
       #endif
       {
-        __pyx_t_11 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 210, __pyx_L1_error)
+        __pyx_t_11 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 212, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         if (__pyx_t_6) {
           __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -3407,24 +3437,24 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
         __Pyx_GIVEREF(__pyx_t_8);
         PyTuple_SET_ITEM(__pyx_t_11, 1+__pyx_t_7, __pyx_t_8);
         __pyx_t_8 = 0;
-        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_11, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 210, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_11, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 212, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
       }
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "glovepy/corpus_cython.pyx":210
+      /* "glovepy/corpus_cython.pyx":212
  *     else:
  *         for word in words:
  *             word_id = dictionary.setdefault(word,             # <<<<<<<<<<<<<<
  *                                             len(dictionary))
  *             word_ids.push_back(word_id)
  */
-      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 210, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 212, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_v_word_id = __pyx_t_7;
 
-      /* "glovepy/corpus_cython.pyx":212
+      /* "glovepy/corpus_cython.pyx":214
  *             word_id = dictionary.setdefault(word,
  *                                             len(dictionary))
  *             word_ids.push_back(word_id)             # <<<<<<<<<<<<<<
@@ -3435,10 +3465,10 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
         __pyx_v_word_ids.push_back(__pyx_v_word_id);
       } catch(...) {
         __Pyx_CppExn2PyErr();
-        __PYX_ERR(0, 212, __pyx_L1_error)
+        __PYX_ERR(0, 214, __pyx_L1_error)
       }
 
-      /* "glovepy/corpus_cython.pyx":209
+      /* "glovepy/corpus_cython.pyx":211
  * 
  *     else:
  *         for word in words:             # <<<<<<<<<<<<<<
@@ -3450,7 +3480,7 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
   }
   __pyx_L3:;
 
-  /* "glovepy/corpus_cython.pyx":214
+  /* "glovepy/corpus_cython.pyx":216
  *             word_ids.push_back(word_id)
  * 
  *     return 0             # <<<<<<<<<<<<<<
@@ -3460,7 +3490,7 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "glovepy/corpus_cython.pyx":176
+  /* "glovepy/corpus_cython.pyx":178
  * 
  * 
  * cdef int words_to_ids(list words, vector[int]& word_ids,             # <<<<<<<<<<<<<<
@@ -3484,11 +3514,11 @@ static int __pyx_f_7glovepy_13corpus_cython_words_to_ids(PyObject *__pyx_v_words
   return __pyx_r;
 }
 
-/* "glovepy/corpus_cython.pyx":217
+/* "glovepy/corpus_cython.pyx":219
  * 
  * 
  * def construct_cooccurrence_matrix(corpus, dictionary, int supplied,             # <<<<<<<<<<<<<<
- *                                   int window_size, int ignore_missing):
+ *                                   int window_size, int ignore_missing, int symmetric):
  *     """
  */
 
@@ -3502,16 +3532,19 @@ static PyObject *__pyx_pw_7glovepy_13corpus_cython_1construct_cooccurrence_matri
   int __pyx_v_supplied;
   int __pyx_v_window_size;
   int __pyx_v_ignore_missing;
+  int __pyx_v_symmetric;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("construct_cooccurrence_matrix (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_corpus,&__pyx_n_s_dictionary,&__pyx_n_s_supplied,&__pyx_n_s_window_size,&__pyx_n_s_ignore_missing,0};
-    PyObject* values[5] = {0,0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_corpus,&__pyx_n_s_dictionary,&__pyx_n_s_supplied,&__pyx_n_s_window_size,&__pyx_n_s_ignore_missing,&__pyx_n_s_symmetric,0};
+    PyObject* values[6] = {0,0,0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        CYTHON_FALLTHROUGH;
         case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
         CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
@@ -3534,31 +3567,37 @@ static PyObject *__pyx_pw_7glovepy_13corpus_cython_1construct_cooccurrence_matri
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_dictionary)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 5, 5, 1); __PYX_ERR(0, 217, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 6, 6, 1); __PYX_ERR(0, 219, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_supplied)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 5, 5, 2); __PYX_ERR(0, 217, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 6, 6, 2); __PYX_ERR(0, 219, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_window_size)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 5, 5, 3); __PYX_ERR(0, 217, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 6, 6, 3); __PYX_ERR(0, 219, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_ignore_missing)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 5, 5, 4); __PYX_ERR(0, 217, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 6, 6, 4); __PYX_ERR(0, 219, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  5:
+        if (likely((values[5] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_symmetric)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 6, 6, 5); __PYX_ERR(0, 219, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "construct_cooccurrence_matrix") < 0)) __PYX_ERR(0, 217, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "construct_cooccurrence_matrix") < 0)) __PYX_ERR(0, 219, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 6) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
@@ -3566,29 +3605,31 @@ static PyObject *__pyx_pw_7glovepy_13corpus_cython_1construct_cooccurrence_matri
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
     }
     __pyx_v_corpus = values[0];
     __pyx_v_dictionary = values[1];
-    __pyx_v_supplied = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_supplied == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 217, __pyx_L3_error)
-    __pyx_v_window_size = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_window_size == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 218, __pyx_L3_error)
-    __pyx_v_ignore_missing = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_ignore_missing == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 218, __pyx_L3_error)
+    __pyx_v_supplied = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_supplied == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 219, __pyx_L3_error)
+    __pyx_v_window_size = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_window_size == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 220, __pyx_L3_error)
+    __pyx_v_ignore_missing = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_ignore_missing == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 220, __pyx_L3_error)
+    __pyx_v_symmetric = __Pyx_PyInt_As_int(values[5]); if (unlikely((__pyx_v_symmetric == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 220, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 217, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("construct_cooccurrence_matrix", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 219, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("glovepy.corpus_cython.construct_cooccurrence_matrix", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix(__pyx_self, __pyx_v_corpus, __pyx_v_dictionary, __pyx_v_supplied, __pyx_v_window_size, __pyx_v_ignore_missing);
+  __pyx_r = __pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix(__pyx_self, __pyx_v_corpus, __pyx_v_dictionary, __pyx_v_supplied, __pyx_v_window_size, __pyx_v_ignore_missing, __pyx_v_symmetric);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_corpus, PyObject *__pyx_v_dictionary, int __pyx_v_supplied, int __pyx_v_window_size, int __pyx_v_ignore_missing) {
+static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_corpus, PyObject *__pyx_v_dictionary, int __pyx_v_supplied, int __pyx_v_window_size, int __pyx_v_ignore_missing, int __pyx_v_symmetric) {
   struct __pyx_t_7glovepy_13corpus_cython_SparseRowMatrix *__pyx_v_matrix;
   PyObject *__pyx_v_words = 0;
   int __pyx_v_i;
@@ -3599,6 +3640,7 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
   int __pyx_v_window_stop;
   int __pyx_v_error;
   std::vector<int>  __pyx_v_word_ids;
+  int __pyx_v_window_start;
   PyObject *__pyx_v_mat = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -3611,9 +3653,10 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
   int __pyx_t_7;
   int __pyx_t_8;
   int __pyx_t_9;
+  int __pyx_t_10;
   __Pyx_RefNannySetupContext("construct_cooccurrence_matrix", 0);
 
-  /* "glovepy/corpus_cython.pyx":227
+  /* "glovepy/corpus_cython.pyx":229
  * 
  *     # Declare the cooccurrence map
  *     cdef SparseRowMatrix* matrix = new_matrix()             # <<<<<<<<<<<<<<
@@ -3622,7 +3665,7 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
  */
   __pyx_v_matrix = __pyx_f_7glovepy_13corpus_cython_new_matrix();
 
-  /* "glovepy/corpus_cython.pyx":237
+  /* "glovepy/corpus_cython.pyx":239
  *     # Pre-allocate some reasonable size
  *     # for the word ids vector.
  *     word_ids.reserve(1000)             # <<<<<<<<<<<<<<
@@ -3631,7 +3674,7 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
  */
   __pyx_v_word_ids.reserve(0x3E8);
 
-  /* "glovepy/corpus_cython.pyx":240
+  /* "glovepy/corpus_cython.pyx":242
  * 
  *     # Iterate over the corpus.
  *     for words in corpus:             # <<<<<<<<<<<<<<
@@ -3642,26 +3685,26 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
     __pyx_t_1 = __pyx_v_corpus; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
     __pyx_t_3 = NULL;
   } else {
-    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_corpus); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 240, __pyx_L1_error)
+    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_corpus); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 242, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 240, __pyx_L1_error)
+    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 242, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_3)) {
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 240, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 242, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 240, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 242, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 240, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 242, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 240, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 242, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -3671,17 +3714,17 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 240, __pyx_L1_error)
+          else __PYX_ERR(0, 242, __pyx_L1_error)
         }
         break;
       }
       __Pyx_GOTREF(__pyx_t_4);
     }
-    if (!(likely(PyList_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 240, __pyx_L1_error)
+    if (!(likely(PyList_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 242, __pyx_L1_error)
     __Pyx_XDECREF_SET(__pyx_v_words, ((PyObject*)__pyx_t_4));
     __pyx_t_4 = 0;
 
-    /* "glovepy/corpus_cython.pyx":243
+    /* "glovepy/corpus_cython.pyx":245
  * 
  *         # Convert words to a numeric vector.
  *         error = words_to_ids(words, word_ids, dictionary,             # <<<<<<<<<<<<<<
@@ -3690,7 +3733,7 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
  */
     __pyx_v_error = __pyx_f_7glovepy_13corpus_cython_words_to_ids(__pyx_v_words, __pyx_v_word_ids, __pyx_v_dictionary, __pyx_v_supplied, __pyx_v_ignore_missing);
 
-    /* "glovepy/corpus_cython.pyx":245
+    /* "glovepy/corpus_cython.pyx":247
  *         error = words_to_ids(words, word_ids, dictionary,
  *                              supplied, ignore_missing)
  *         if error == -1:             # <<<<<<<<<<<<<<
@@ -3700,20 +3743,20 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
     __pyx_t_5 = ((__pyx_v_error == -1L) != 0);
     if (__pyx_t_5) {
 
-      /* "glovepy/corpus_cython.pyx":246
+      /* "glovepy/corpus_cython.pyx":248
  *                              supplied, ignore_missing)
  *         if error == -1:
  *             raise KeyError('Word missing from dictionary')             # <<<<<<<<<<<<<<
  * 
  *         wordslen = word_ids.size()
  */
-      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_KeyError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 246, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_KeyError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 248, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_Raise(__pyx_t_4, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __PYX_ERR(0, 246, __pyx_L1_error)
+      __PYX_ERR(0, 248, __pyx_L1_error)
 
-      /* "glovepy/corpus_cython.pyx":245
+      /* "glovepy/corpus_cython.pyx":247
  *         error = words_to_ids(words, word_ids, dictionary,
  *                              supplied, ignore_missing)
  *         if error == -1:             # <<<<<<<<<<<<<<
@@ -3722,7 +3765,7 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
  */
     }
 
-    /* "glovepy/corpus_cython.pyx":248
+    /* "glovepy/corpus_cython.pyx":250
  *             raise KeyError('Word missing from dictionary')
  * 
  *         wordslen = word_ids.size()             # <<<<<<<<<<<<<<
@@ -3731,7 +3774,7 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
  */
     __pyx_v_wordslen = __pyx_v_word_ids.size();
 
-    /* "glovepy/corpus_cython.pyx":251
+    /* "glovepy/corpus_cython.pyx":253
  * 
  *         # Record co-occurrences in a moving window.
  *         for i in range(wordslen):             # <<<<<<<<<<<<<<
@@ -3742,7 +3785,7 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
     for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
       __pyx_v_i = __pyx_t_7;
 
-      /* "glovepy/corpus_cython.pyx":252
+      /* "glovepy/corpus_cython.pyx":254
  *         # Record co-occurrences in a moving window.
  *         for i in range(wordslen):
  *             outer_word = word_ids[i]             # <<<<<<<<<<<<<<
@@ -3751,7 +3794,7 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
  */
       __pyx_v_outer_word = (__pyx_v_word_ids[__pyx_v_i]);
 
-      /* "glovepy/corpus_cython.pyx":255
+      /* "glovepy/corpus_cython.pyx":257
  * 
  *             # Continue if we have an OOD token.
  *             if outer_word == -1:             # <<<<<<<<<<<<<<
@@ -3761,16 +3804,16 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
       __pyx_t_5 = ((__pyx_v_outer_word == -1L) != 0);
       if (__pyx_t_5) {
 
-        /* "glovepy/corpus_cython.pyx":256
+        /* "glovepy/corpus_cython.pyx":258
  *             # Continue if we have an OOD token.
  *             if outer_word == -1:
  *                 continue             # <<<<<<<<<<<<<<
  * 
- *             window_stop = int_min(i + window_size + 1, wordslen)
+ *             # The left side of the context
  */
         goto __pyx_L6_continue;
 
-        /* "glovepy/corpus_cython.pyx":255
+        /* "glovepy/corpus_cython.pyx":257
  * 
  *             # Continue if we have an OOD token.
  *             if outer_word == -1:             # <<<<<<<<<<<<<<
@@ -3779,92 +3822,72 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
  */
       }
 
-      /* "glovepy/corpus_cython.pyx":258
- *                 continue
+      /* "glovepy/corpus_cython.pyx":261
  * 
- *             window_stop = int_min(i + window_size + 1, wordslen)             # <<<<<<<<<<<<<<
+ *             # The left side of the context
+ *             window_start = int_max(0, i - window_size)             # <<<<<<<<<<<<<<
  * 
- *             for j in range(i, window_stop):
+ *             for j in range(window_start, i):
  */
-      __pyx_v_window_stop = __pyx_f_7glovepy_13corpus_cython_int_min(((__pyx_v_i + __pyx_v_window_size) + 1), __pyx_v_wordslen);
+      __pyx_v_window_start = __pyx_f_7glovepy_13corpus_cython_int_max(0, (__pyx_v_i - __pyx_v_window_size));
 
-      /* "glovepy/corpus_cython.pyx":260
- *             window_stop = int_min(i + window_size + 1, wordslen)
+      /* "glovepy/corpus_cython.pyx":263
+ *             window_start = int_max(0, i - window_size)
  * 
- *             for j in range(i, window_stop):             # <<<<<<<<<<<<<<
+ *             for j in range(window_start, i):             # <<<<<<<<<<<<<<
  *                 inner_word = word_ids[j]
  * 
  */
-      __pyx_t_8 = __pyx_v_window_stop;
-      for (__pyx_t_9 = __pyx_v_i; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
+      __pyx_t_8 = __pyx_v_i;
+      for (__pyx_t_9 = __pyx_v_window_start; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
         __pyx_v_j = __pyx_t_9;
 
-        /* "glovepy/corpus_cython.pyx":261
+        /* "glovepy/corpus_cython.pyx":264
  * 
- *             for j in range(i, window_stop):
+ *             for j in range(window_start, i):
  *                 inner_word = word_ids[j]             # <<<<<<<<<<<<<<
  * 
- *                 if inner_word == -1:
+ *                 if inner_word == -1 or inner_word == outer_word:
  */
         __pyx_v_inner_word = (__pyx_v_word_ids[__pyx_v_j]);
 
-        /* "glovepy/corpus_cython.pyx":263
+        /* "glovepy/corpus_cython.pyx":266
  *                 inner_word = word_ids[j]
  * 
- *                 if inner_word == -1:             # <<<<<<<<<<<<<<
+ *                 if inner_word == -1 or inner_word == outer_word:             # <<<<<<<<<<<<<<
  *                     continue
  * 
  */
-        __pyx_t_5 = ((__pyx_v_inner_word == -1L) != 0);
-        if (__pyx_t_5) {
-
-          /* "glovepy/corpus_cython.pyx":264
- * 
- *                 if inner_word == -1:
- *                     continue             # <<<<<<<<<<<<<<
- * 
- *                 # Do nothing if the words are the same.
- */
-          goto __pyx_L9_continue;
-
-          /* "glovepy/corpus_cython.pyx":263
- *                 inner_word = word_ids[j]
- * 
- *                 if inner_word == -1:             # <<<<<<<<<<<<<<
- *                     continue
- * 
- */
+        __pyx_t_10 = ((__pyx_v_inner_word == -1L) != 0);
+        if (!__pyx_t_10) {
+        } else {
+          __pyx_t_5 = __pyx_t_10;
+          goto __pyx_L12_bool_binop_done;
         }
-
-        /* "glovepy/corpus_cython.pyx":267
- * 
- *                 # Do nothing if the words are the same.
- *                 if inner_word == outer_word:             # <<<<<<<<<<<<<<
- *                     continue
- * 
- */
-        __pyx_t_5 = ((__pyx_v_inner_word == __pyx_v_outer_word) != 0);
+        __pyx_t_10 = ((__pyx_v_inner_word == __pyx_v_outer_word) != 0);
+        __pyx_t_5 = __pyx_t_10;
+        __pyx_L12_bool_binop_done:;
         if (__pyx_t_5) {
 
-          /* "glovepy/corpus_cython.pyx":268
- *                 # Do nothing if the words are the same.
- *                 if inner_word == outer_word:
+          /* "glovepy/corpus_cython.pyx":267
+ * 
+ *                 if inner_word == -1 or inner_word == outer_word:
  *                     continue             # <<<<<<<<<<<<<<
  * 
  *                 if inner_word < outer_word:
  */
           goto __pyx_L9_continue;
 
-          /* "glovepy/corpus_cython.pyx":267
+          /* "glovepy/corpus_cython.pyx":266
+ *                 inner_word = word_ids[j]
  * 
- *                 # Do nothing if the words are the same.
- *                 if inner_word == outer_word:             # <<<<<<<<<<<<<<
+ *                 if inner_word == -1 or inner_word == outer_word:             # <<<<<<<<<<<<<<
  *                     continue
  * 
  */
         }
 
-        /* "glovepy/corpus_cython.pyx":270
+        /* "glovepy/corpus_cython.pyx":269
  *                     continue
  * 
  *                 if inner_word < outer_word:             # <<<<<<<<<<<<<<
@@ -3874,27 +3897,27 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
         __pyx_t_5 = ((__pyx_v_inner_word < __pyx_v_outer_word) != 0);
         if (__pyx_t_5) {
 
-          /* "glovepy/corpus_cython.pyx":271
+          /* "glovepy/corpus_cython.pyx":270
  * 
  *                 if inner_word < outer_word:
  *                     increment_matrix(matrix,             # <<<<<<<<<<<<<<
  *                                      inner_word,
  *                                      outer_word,
  */
-          __pyx_f_7glovepy_13corpus_cython_increment_matrix(__pyx_v_matrix, __pyx_v_inner_word, __pyx_v_outer_word, (1.0 / (__pyx_v_j - __pyx_v_i)));
+          __pyx_f_7glovepy_13corpus_cython_increment_matrix(__pyx_v_matrix, __pyx_v_inner_word, __pyx_v_outer_word, (1.0 / (__pyx_v_i - __pyx_v_j)));
 
-          /* "glovepy/corpus_cython.pyx":270
+          /* "glovepy/corpus_cython.pyx":269
  *                     continue
  * 
  *                 if inner_word < outer_word:             # <<<<<<<<<<<<<<
  *                     increment_matrix(matrix,
  *                                      inner_word,
  */
-          goto __pyx_L13;
+          goto __pyx_L14;
         }
 
-        /* "glovepy/corpus_cython.pyx":276
- *                                      1.0 / (j - i))
+        /* "glovepy/corpus_cython.pyx":275
+ *                                      1.0 / (i - j))
  *                 else:
  *                     increment_matrix(matrix,             # <<<<<<<<<<<<<<
  *                                      outer_word,
@@ -3902,22 +3925,177 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
  */
         /*else*/ {
 
-          /* "glovepy/corpus_cython.pyx":279
+          /* "glovepy/corpus_cython.pyx":278
  *                                      outer_word,
  *                                      inner_word,
- *                                      1.0 / (j - i))             # <<<<<<<<<<<<<<
+ *                                      1.0 / (i - j))             # <<<<<<<<<<<<<<
+ * 
+ *             # Also get the right side of the context if symmetric is set to True
+ */
+          __pyx_f_7glovepy_13corpus_cython_increment_matrix(__pyx_v_matrix, __pyx_v_outer_word, __pyx_v_inner_word, (1.0 / (__pyx_v_i - __pyx_v_j)));
+        }
+        __pyx_L14:;
+        __pyx_L9_continue:;
+      }
+
+      /* "glovepy/corpus_cython.pyx":281
+ * 
+ *             # Also get the right side of the context if symmetric is set to True
+ *             if symmetric:             # <<<<<<<<<<<<<<
+ *                 window_stop = int_min(i + window_size + 1, wordslen)
+ * 
+ */
+      __pyx_t_5 = (__pyx_v_symmetric != 0);
+      if (__pyx_t_5) {
+
+        /* "glovepy/corpus_cython.pyx":282
+ *             # Also get the right side of the context if symmetric is set to True
+ *             if symmetric:
+ *                 window_stop = int_min(i + window_size + 1, wordslen)             # <<<<<<<<<<<<<<
+ * 
+ *                 for j in range(i+1, window_stop):
+ */
+        __pyx_v_window_stop = __pyx_f_7glovepy_13corpus_cython_int_min(((__pyx_v_i + __pyx_v_window_size) + 1), __pyx_v_wordslen);
+
+        /* "glovepy/corpus_cython.pyx":284
+ *                 window_stop = int_min(i + window_size + 1, wordslen)
+ * 
+ *                 for j in range(i+1, window_stop):             # <<<<<<<<<<<<<<
+ *                     inner_word = word_ids[j]
+ * 
+ */
+        __pyx_t_8 = __pyx_v_window_stop;
+        for (__pyx_t_9 = (__pyx_v_i + 1); __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
+          __pyx_v_j = __pyx_t_9;
+
+          /* "glovepy/corpus_cython.pyx":285
+ * 
+ *                 for j in range(i+1, window_stop):
+ *                     inner_word = word_ids[j]             # <<<<<<<<<<<<<<
+ * 
+ *                     if inner_word == -1:
+ */
+          __pyx_v_inner_word = (__pyx_v_word_ids[__pyx_v_j]);
+
+          /* "glovepy/corpus_cython.pyx":287
+ *                     inner_word = word_ids[j]
+ * 
+ *                     if inner_word == -1:             # <<<<<<<<<<<<<<
+ *                         continue
+ * 
+ */
+          __pyx_t_5 = ((__pyx_v_inner_word == -1L) != 0);
+          if (__pyx_t_5) {
+
+            /* "glovepy/corpus_cython.pyx":288
+ * 
+ *                     if inner_word == -1:
+ *                         continue             # <<<<<<<<<<<<<<
+ * 
+ *                     # Do nothing if the words are the same.
+ */
+            goto __pyx_L16_continue;
+
+            /* "glovepy/corpus_cython.pyx":287
+ *                     inner_word = word_ids[j]
+ * 
+ *                     if inner_word == -1:             # <<<<<<<<<<<<<<
+ *                         continue
+ * 
+ */
+          }
+
+          /* "glovepy/corpus_cython.pyx":291
+ * 
+ *                     # Do nothing if the words are the same.
+ *                     if inner_word == outer_word:             # <<<<<<<<<<<<<<
+ *                         continue
+ * 
+ */
+          __pyx_t_5 = ((__pyx_v_inner_word == __pyx_v_outer_word) != 0);
+          if (__pyx_t_5) {
+
+            /* "glovepy/corpus_cython.pyx":292
+ *                     # Do nothing if the words are the same.
+ *                     if inner_word == outer_word:
+ *                         continue             # <<<<<<<<<<<<<<
+ * 
+ *                     if inner_word < outer_word:
+ */
+            goto __pyx_L16_continue;
+
+            /* "glovepy/corpus_cython.pyx":291
+ * 
+ *                     # Do nothing if the words are the same.
+ *                     if inner_word == outer_word:             # <<<<<<<<<<<<<<
+ *                         continue
+ * 
+ */
+          }
+
+          /* "glovepy/corpus_cython.pyx":294
+ *                         continue
+ * 
+ *                     if inner_word < outer_word:             # <<<<<<<<<<<<<<
+ *                         increment_matrix(matrix,
+ *                                         inner_word,
+ */
+          __pyx_t_5 = ((__pyx_v_inner_word < __pyx_v_outer_word) != 0);
+          if (__pyx_t_5) {
+
+            /* "glovepy/corpus_cython.pyx":295
+ * 
+ *                     if inner_word < outer_word:
+ *                         increment_matrix(matrix,             # <<<<<<<<<<<<<<
+ *                                         inner_word,
+ *                                         outer_word,
+ */
+            __pyx_f_7glovepy_13corpus_cython_increment_matrix(__pyx_v_matrix, __pyx_v_inner_word, __pyx_v_outer_word, (1.0 / (__pyx_v_j - __pyx_v_i)));
+
+            /* "glovepy/corpus_cython.pyx":294
+ *                         continue
+ * 
+ *                     if inner_word < outer_word:             # <<<<<<<<<<<<<<
+ *                         increment_matrix(matrix,
+ *                                         inner_word,
+ */
+            goto __pyx_L20;
+          }
+
+          /* "glovepy/corpus_cython.pyx":300
+ *                                         1.0 / (j - i))
+ *                     else:
+ *                         increment_matrix(matrix,             # <<<<<<<<<<<<<<
+ *                                         outer_word,
+ *                                         inner_word,
+ */
+          /*else*/ {
+
+            /* "glovepy/corpus_cython.pyx":303
+ *                                         outer_word,
+ *                                         inner_word,
+ *                                         1.0 / (j - i))             # <<<<<<<<<<<<<<
  * 
  *     # Create the matrix.
  */
-          __pyx_f_7glovepy_13corpus_cython_increment_matrix(__pyx_v_matrix, __pyx_v_outer_word, __pyx_v_inner_word, (1.0 / (__pyx_v_j - __pyx_v_i)));
+            __pyx_f_7glovepy_13corpus_cython_increment_matrix(__pyx_v_matrix, __pyx_v_outer_word, __pyx_v_inner_word, (1.0 / (__pyx_v_j - __pyx_v_i)));
+          }
+          __pyx_L20:;
+          __pyx_L16_continue:;
         }
-        __pyx_L13:;
-        __pyx_L9_continue:;
+
+        /* "glovepy/corpus_cython.pyx":281
+ * 
+ *             # Also get the right side of the context if symmetric is set to True
+ *             if symmetric:             # <<<<<<<<<<<<<<
+ *                 window_stop = int_min(i + window_size + 1, wordslen)
+ * 
+ */
       }
       __pyx_L6_continue:;
     }
 
-    /* "glovepy/corpus_cython.pyx":240
+    /* "glovepy/corpus_cython.pyx":242
  * 
  *     # Iterate over the corpus.
  *     for words in corpus:             # <<<<<<<<<<<<<<
@@ -3927,20 +4105,20 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/corpus_cython.pyx":282
+  /* "glovepy/corpus_cython.pyx":306
  * 
  *     # Create the matrix.
  *     mat = matrix_to_coo(matrix, len(dictionary))             # <<<<<<<<<<<<<<
  *     free_matrix(matrix)
  * 
  */
-  __pyx_t_2 = PyObject_Length(__pyx_v_dictionary); if (unlikely(__pyx_t_2 == -1)) __PYX_ERR(0, 282, __pyx_L1_error)
-  __pyx_t_1 = __pyx_f_7glovepy_13corpus_cython_matrix_to_coo(__pyx_v_matrix, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 282, __pyx_L1_error)
+  __pyx_t_2 = PyObject_Length(__pyx_v_dictionary); if (unlikely(__pyx_t_2 == -1)) __PYX_ERR(0, 306, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_7glovepy_13corpus_cython_matrix_to_coo(__pyx_v_matrix, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 306, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_mat = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "glovepy/corpus_cython.pyx":283
+  /* "glovepy/corpus_cython.pyx":307
  *     # Create the matrix.
  *     mat = matrix_to_coo(matrix, len(dictionary))
  *     free_matrix(matrix)             # <<<<<<<<<<<<<<
@@ -3949,7 +4127,7 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
  */
   __pyx_f_7glovepy_13corpus_cython_free_matrix(__pyx_v_matrix);
 
-  /* "glovepy/corpus_cython.pyx":285
+  /* "glovepy/corpus_cython.pyx":309
  *     free_matrix(matrix)
  * 
  *     return mat             # <<<<<<<<<<<<<<
@@ -3959,11 +4137,11 @@ static PyObject *__pyx_pf_7glovepy_13corpus_cython_construct_cooccurrence_matrix
   __pyx_r = __pyx_v_mat;
   goto __pyx_L0;
 
-  /* "glovepy/corpus_cython.pyx":217
+  /* "glovepy/corpus_cython.pyx":219
  * 
  * 
  * def construct_cooccurrence_matrix(corpus, dictionary, int supplied,             # <<<<<<<<<<<<<<
- *                                   int window_size, int ignore_missing):
+ *                                   int window_size, int ignore_missing, int symmetric):
  *     """
  */
 
@@ -17521,12 +17699,14 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_stringsource, __pyx_k_stringsource, sizeof(__pyx_k_stringsource), 0, 0, 1, 0},
   {&__pyx_n_s_struct, __pyx_k_struct, sizeof(__pyx_k_struct), 0, 0, 1, 1},
   {&__pyx_n_s_supplied, __pyx_k_supplied, sizeof(__pyx_k_supplied), 0, 0, 1, 1},
+  {&__pyx_n_s_symmetric, __pyx_k_symmetric, sizeof(__pyx_k_symmetric), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {&__pyx_kp_s_unable_to_allocate_array_data, __pyx_k_unable_to_allocate_array_data, sizeof(__pyx_k_unable_to_allocate_array_data), 0, 0, 1, 0},
   {&__pyx_kp_s_unable_to_allocate_shape_and_str, __pyx_k_unable_to_allocate_shape_and_str, sizeof(__pyx_k_unable_to_allocate_shape_and_str), 0, 0, 1, 0},
   {&__pyx_n_s_unpack, __pyx_k_unpack, sizeof(__pyx_k_unpack), 0, 0, 1, 1},
   {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
   {&__pyx_n_s_window_size, __pyx_k_window_size, sizeof(__pyx_k_window_size), 0, 0, 1, 1},
+  {&__pyx_n_s_window_start, __pyx_k_window_start, sizeof(__pyx_k_window_start), 0, 0, 1, 1},
   {&__pyx_n_s_window_stop, __pyx_k_window_stop, sizeof(__pyx_k_window_stop), 0, 0, 1, 1},
   {&__pyx_n_s_word_ids, __pyx_k_word_ids, sizeof(__pyx_k_word_ids), 0, 0, 1, 1},
   {&__pyx_n_s_words, __pyx_k_words, sizeof(__pyx_k_words), 0, 0, 1, 1},
@@ -17534,9 +17714,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(0, 56, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 72, __pyx_L1_error)
-  __pyx_builtin_KeyError = __Pyx_GetBuiltinName(__pyx_n_s_KeyError); if (!__pyx_builtin_KeyError) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(0, 58, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 74, __pyx_L1_error)
+  __pyx_builtin_KeyError = __Pyx_GetBuiltinName(__pyx_n_s_KeyError); if (!__pyx_builtin_KeyError) __PYX_ERR(0, 248, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 131, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(1, 149, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
@@ -17552,14 +17732,14 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "glovepy/corpus_cython.pyx":246
+  /* "glovepy/corpus_cython.pyx":248
  *                              supplied, ignore_missing)
  *         if error == -1:
  *             raise KeyError('Word missing from dictionary')             # <<<<<<<<<<<<<<
  * 
  *         wordslen = word_ids.size()
  */
-  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_s_Word_missing_from_dictionary); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_s_Word_missing_from_dictionary); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 248, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
@@ -17766,17 +17946,17 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__20);
   __Pyx_GIVEREF(__pyx_tuple__20);
 
-  /* "glovepy/corpus_cython.pyx":217
+  /* "glovepy/corpus_cython.pyx":219
  * 
  * 
  * def construct_cooccurrence_matrix(corpus, dictionary, int supplied,             # <<<<<<<<<<<<<<
- *                                   int window_size, int ignore_missing):
+ *                                   int window_size, int ignore_missing, int symmetric):
  *     """
  */
-  __pyx_tuple__22 = PyTuple_Pack(16, __pyx_n_s_corpus, __pyx_n_s_dictionary, __pyx_n_s_supplied, __pyx_n_s_window_size, __pyx_n_s_ignore_missing, __pyx_n_s_matrix, __pyx_n_s_words, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_outer_word, __pyx_n_s_inner_word, __pyx_n_s_wordslen, __pyx_n_s_window_stop, __pyx_n_s_error, __pyx_n_s_word_ids, __pyx_n_s_mat); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(0, 217, __pyx_L1_error)
+  __pyx_tuple__22 = PyTuple_Pack(18, __pyx_n_s_corpus, __pyx_n_s_dictionary, __pyx_n_s_supplied, __pyx_n_s_window_size, __pyx_n_s_ignore_missing, __pyx_n_s_symmetric, __pyx_n_s_matrix, __pyx_n_s_words, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_outer_word, __pyx_n_s_inner_word, __pyx_n_s_wordslen, __pyx_n_s_window_stop, __pyx_n_s_error, __pyx_n_s_word_ids, __pyx_n_s_window_start, __pyx_n_s_mat); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__22);
   __Pyx_GIVEREF(__pyx_tuple__22);
-  __pyx_codeobj__23 = (PyObject*)__Pyx_PyCode_New(5, 0, 16, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__22, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_glovepy_corpus_cython_pyx, __pyx_n_s_construct_cooccurrence_matrix, 217, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__23)) __PYX_ERR(0, 217, __pyx_L1_error)
+  __pyx_codeobj__23 = (PyObject*)__Pyx_PyCode_New(6, 0, 18, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__22, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_glovepy_corpus_cython_pyx, __pyx_n_s_construct_cooccurrence_matrix, 219, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__23)) __PYX_ERR(0, 219, __pyx_L1_error)
 
   /* "View.MemoryView":282
  *         return self.name
@@ -17994,52 +18174,52 @@ PyMODINIT_FUNC PyInit_corpus_cython(void)
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "glovepy/corpus_cython.pyx":5
+  /* "glovepy/corpus_cython.pyx":6
  * # cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
  * import scipy.sparse as sp
  * 
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 5, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 5, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/corpus_cython.pyx":6
+  /* "glovepy/corpus_cython.pyx":7
  * 
  * import numpy as np
  * import scipy.sparse as sp             # <<<<<<<<<<<<<<
  * 
  * from libc.stdlib cimport malloc, free
  */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s__21);
   __Pyx_GIVEREF(__pyx_n_s__21);
   PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s__21);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_scipy_sparse, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_scipy_sparse, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_sp, __pyx_t_2) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_sp, __pyx_t_2) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "glovepy/corpus_cython.pyx":217
+  /* "glovepy/corpus_cython.pyx":219
  * 
  * 
  * def construct_cooccurrence_matrix(corpus, dictionary, int supplied,             # <<<<<<<<<<<<<<
- *                                   int window_size, int ignore_missing):
+ *                                   int window_size, int ignore_missing, int symmetric):
  *     """
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_7glovepy_13corpus_cython_1construct_cooccurrence_matrix, NULL, __pyx_n_s_glovepy_corpus_cython); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 217, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_7glovepy_13corpus_cython_1construct_cooccurrence_matrix, NULL, __pyx_n_s_glovepy_corpus_cython); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_construct_cooccurrence_matrix, __pyx_t_2) < 0) __PYX_ERR(0, 217, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_construct_cooccurrence_matrix, __pyx_t_2) < 0) __PYX_ERR(0, 219, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "glovepy/corpus_cython.pyx":1
  * #!python             # <<<<<<<<<<<<<<
  * # distutils: language = c++
- * # cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True
+ * # distutils: sources = corpus_cython.cpp
  */
   __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -20677,6 +20857,37 @@ __pyx_capsule_create(void *p, CYTHON_UNUSED const char *sig)
     }
 }
 
+/* CIntToPy */
+        static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
+    const long neg_one = (long) -1, const_zero = (long) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(long) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(long) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(long) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(long),
+                                     little, !is_unsigned);
+    }
+}
+
 /* MemviewSliceCopyTemplate */
         static __Pyx_memviewslice
 __pyx_memoryview_copy_new_contig(const __Pyx_memviewslice *from_mvs,
@@ -21120,37 +21331,6 @@ raise_neg_overflow:
     PyErr_SetString(PyExc_OverflowError,
         "can't convert negative value to long");
     return (long) -1;
-}
-
-/* CIntToPy */
-        static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
-    const long neg_one = (long) -1, const_zero = (long) 0;
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(long) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(long) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(long) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(long),
-                                     little, !is_unsigned);
-    }
 }
 
 /* CIntFromPy */

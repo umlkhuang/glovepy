@@ -1,5 +1,6 @@
 #!python
 # distutils: language = c++
+# distutils: sources = corpus_cython.cpp
 # cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True
 
 import numpy as np
@@ -12,6 +13,7 @@ from libcpp.vector cimport vector
 
 
 cdef inline int int_min(int a, int b) nogil: return a if a <= b else b
+cdef inline int int_max(int a, int b) nogil: return a if a >= b else b
 
 
 cdef int binary_search(int* vec, int size, int first, int last, int x) nogil:
@@ -215,7 +217,7 @@ cdef int words_to_ids(list words, vector[int]& word_ids,
 
 
 def construct_cooccurrence_matrix(corpus, dictionary, int supplied,
-                                  int window_size, int ignore_missing):
+                                  int window_size, int ignore_missing, int symmetric):
     """
     Construct the word-id dictionary and cooccurrence matrix for
     a given corpus, using a given window size.
@@ -254,29 +256,51 @@ def construct_cooccurrence_matrix(corpus, dictionary, int supplied,
             # Continue if we have an OOD token.
             if outer_word == -1:
                 continue
-
-            window_stop = int_min(i + window_size + 1, wordslen)
-
-            for j in range(i, window_stop):
+            
+            # The left side of the context
+            window_start = int_max(0, i - window_size)
+            
+            for j in range(window_start, i):
                 inner_word = word_ids[j]
 
-                if inner_word == -1:
+                if inner_word == -1 or inner_word == outer_word:
                     continue
-
-                # Do nothing if the words are the same.
-                if inner_word == outer_word:
-                    continue
-
+                
                 if inner_word < outer_word:
                     increment_matrix(matrix,
                                      inner_word,
                                      outer_word,
-                                     1.0 / (j - i))
+                                     1.0 / (i - j))
                 else:
                     increment_matrix(matrix,
                                      outer_word,
                                      inner_word,
-                                     1.0 / (j - i))
+                                     1.0 / (i - j))
+            
+            # Also get the right side of the context if symmetric is set to True
+            if symmetric:
+                window_stop = int_min(i + window_size + 1, wordslen)
+
+                for j in range(i+1, window_stop):
+                    inner_word = word_ids[j]
+
+                    if inner_word == -1:
+                        continue
+
+                    # Do nothing if the words are the same.
+                    if inner_word == outer_word:
+                        continue
+
+                    if inner_word < outer_word:
+                        increment_matrix(matrix,
+                                        inner_word,
+                                        outer_word,
+                                        1.0 / (j - i))
+                    else:
+                        increment_matrix(matrix,
+                                        outer_word,
+                                        inner_word,
+                                        1.0 / (j - i))
 
     # Create the matrix.
     mat = matrix_to_coo(matrix, len(dictionary))

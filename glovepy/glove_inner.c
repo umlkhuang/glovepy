@@ -912,7 +912,7 @@ typedef npy_double __pyx_t_5numpy_double_t;
 typedef npy_longdouble __pyx_t_5numpy_longdouble_t;
 
 /* "glovepy/glove_inner.pyx":13
- * from libc.math cimport exp, log, pow, sqrt
+ * from libc.math cimport exp, log, pow, sqrt, isnan
  * 
  * ctypedef np.float64_t REAL_t             # <<<<<<<<<<<<<<
  * ctypedef np.uint32_t  INT_t
@@ -1440,8 +1440,6 @@ static const char __pyx_k_error_2[] = "error";
 static const char __pyx_k_gradsqW[] = "gradsqW";
 static const char __pyx_k_gradsqb[] = "gradsqb";
 static const char __pyx_k_job_key[] = "job_key";
-static const char __pyx_k_ContextB[] = "ContextB";
-static const char __pyx_k_ContextW[] = "ContextW";
 static const char __pyx_k_gradsqW_2[] = "gradsqW_";
 static const char __pyx_k_gradsqb_2[] = "gradsqb_";
 static const char __pyx_k_step_size[] = "_step_size";
@@ -1454,8 +1452,6 @@ static const char __pyx_k_step_size_2[] = "step_size";
 static const char __pyx_k_train_glove[] = "train_glove";
 static const char __pyx_k_vector_size[] = "vector_size";
 static const char __pyx_k_RuntimeError[] = "RuntimeError";
-static const char __pyx_k_gradsqContextB[] = "gradsqContextB";
-static const char __pyx_k_gradsqContextW[] = "gradsqContextW";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_glovepy_glove_inner[] = "glovepy.glove_inner";
 static const char __pyx_k_glovepy_glove_inner_pyx[] = "glovepy\\glove_inner.pyx";
@@ -1467,8 +1463,6 @@ static const char __pyx_k_Non_native_byte_order_not_suppor[] = "Non-native byte 
 static const char __pyx_k_ndarray_is_not_Fortran_contiguou[] = "ndarray is not Fortran contiguous";
 static const char __pyx_k_numpy_core_umath_failed_to_impor[] = "numpy.core.umath failed to import";
 static const char __pyx_k_Format_string_allocated_too_shor_2[] = "Format string allocated too short.";
-static PyObject *__pyx_n_s_ContextB;
-static PyObject *__pyx_n_s_ContextW;
 static PyObject *__pyx_kp_u_Format_string_allocated_too_shor;
 static PyObject *__pyx_kp_u_Format_string_allocated_too_shor_2;
 static PyObject *__pyx_n_s_ImportError;
@@ -1487,8 +1481,6 @@ static PyObject *__pyx_n_s_error;
 static PyObject *__pyx_n_s_error_2;
 static PyObject *__pyx_n_s_glovepy_glove_inner;
 static PyObject *__pyx_kp_s_glovepy_glove_inner_pyx;
-static PyObject *__pyx_n_s_gradsqContextB;
-static PyObject *__pyx_n_s_gradsqContextW;
 static PyObject *__pyx_n_s_gradsqW;
 static PyObject *__pyx_n_s_gradsqW_2;
 static PyObject *__pyx_n_s_gradsqb;
@@ -1533,11 +1525,11 @@ static PyObject *__pyx_codeobj__11;
  * ctypedef np.uint32_t  INT_t
  * 
  * cdef void train_glove_thread(             # <<<<<<<<<<<<<<
- *         REAL_t * W,       REAL_t * ContextW,
- *         REAL_t * gradsqW, REAL_t * gradsqContextW,
+ *         REAL_t * W,          REAL_t * W_,
+ *         REAL_t * gradsqW,    REAL_t * gradsqW_,
  */
 
-static void __pyx_f_7glovepy_11glove_inner_train_glove_thread(__pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_W, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_ContextW, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqW, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqContextW, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_bias, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_ContextB, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqb, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqContextB, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_error, __pyx_t_7glovepy_11glove_inner_INT_t *__pyx_v_job_key, __pyx_t_7glovepy_11glove_inner_INT_t *__pyx_v_job_subkey, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_job_target, int __pyx_v_vector_size, int __pyx_v_batch_size, __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_v_x_max, __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_v_alpha, __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_v_step_size) {
+static void __pyx_f_7glovepy_11glove_inner_train_glove_thread(__pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_W, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_W_, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqW, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqW_, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_bias, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_bias_, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqb, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqb_, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_error, __pyx_t_7glovepy_11glove_inner_INT_t *__pyx_v_job_key, __pyx_t_7glovepy_11glove_inner_INT_t *__pyx_v_job_subkey, __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_job_target, int __pyx_v_vector_size, int __pyx_v_batch_size, __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_v_x_max, __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_v_alpha, __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_v_step_size) {
   PY_LONG_LONG __pyx_v_b;
   PY_LONG_LONG __pyx_v_l1;
   PY_LONG_LONG __pyx_v_l2;
@@ -1546,26 +1538,32 @@ static void __pyx_f_7glovepy_11glove_inner_train_glove_thread(__pyx_t_7glovepy_1
   __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_v_temp2;
   __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_v_diff;
   __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_v_fdiff;
+  __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_v_temp1_;
+  __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_v_temp2_;
+  __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_v_diff_;
+  __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_v_fdiff_;
   int __pyx_t_1;
   int __pyx_t_2;
   int __pyx_t_3;
   PY_LONG_LONG __pyx_t_4;
   __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_t_5;
-  long __pyx_t_6;
-  PY_LONG_LONG __pyx_t_7;
-  __pyx_t_7glovepy_11glove_inner_INT_t __pyx_t_8;
+  int __pyx_t_6;
+  int __pyx_t_7;
+  long __pyx_t_8;
+  PY_LONG_LONG __pyx_t_9;
+  __pyx_t_7glovepy_11glove_inner_INT_t __pyx_t_10;
 
   /* "glovepy/glove_inner.pyx":26
  * 
- *     cdef long long a, b, l1, l2
+ *     cdef long long b, l1, l2
  *     cdef int example_idx = 0             # <<<<<<<<<<<<<<
  *     cdef REAL_t temp1, temp2, diff, fdiff
- * 
+ *     cdef REAL_t temp1_, temp2_, diff_, fdiff_
  */
   __pyx_v_example_idx = 0;
 
-  /* "glovepy/glove_inner.pyx":29
- *     cdef REAL_t temp1, temp2, diff, fdiff
+  /* "glovepy/glove_inner.pyx":30
+ *     cdef REAL_t temp1_, temp2_, diff_, fdiff_
  * 
  *     for example_idx in range(batch_size):             # <<<<<<<<<<<<<<
  *         # Calculate cost, save diff for gradients
@@ -1575,7 +1573,7 @@ static void __pyx_f_7glovepy_11glove_inner_train_glove_thread(__pyx_t_7glovepy_1
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_example_idx = __pyx_t_2;
 
-    /* "glovepy/glove_inner.pyx":31
+    /* "glovepy/glove_inner.pyx":32
  *     for example_idx in range(batch_size):
  *         # Calculate cost, save diff for gradients
  *         l1 = job_key[example_idx]    * vector_size             # <<<<<<<<<<<<<<
@@ -1584,59 +1582,86 @@ static void __pyx_f_7glovepy_11glove_inner_train_glove_thread(__pyx_t_7glovepy_1
  */
     __pyx_v_l1 = ((__pyx_v_job_key[__pyx_v_example_idx]) * __pyx_v_vector_size);
 
-    /* "glovepy/glove_inner.pyx":32
+    /* "glovepy/glove_inner.pyx":33
  *         # Calculate cost, save diff for gradients
  *         l1 = job_key[example_idx]    * vector_size
  *         l2 = job_subkey[example_idx] * vector_size             # <<<<<<<<<<<<<<
  * 
- *         diff = 0.0;
+ *         diff  = 0.0
  */
     __pyx_v_l2 = ((__pyx_v_job_subkey[__pyx_v_example_idx]) * __pyx_v_vector_size);
 
-    /* "glovepy/glove_inner.pyx":34
+    /* "glovepy/glove_inner.pyx":35
  *         l2 = job_subkey[example_idx] * vector_size
  * 
- *         diff = 0.0;             # <<<<<<<<<<<<<<
+ *         diff  = 0.0             # <<<<<<<<<<<<<<
+ *         diff_ = 0.0
  *         for b in range(vector_size):
- *             diff += W[b + l1] * ContextW[b + l2] # dot product of word and context word vector
  */
     __pyx_v_diff = 0.0;
 
-    /* "glovepy/glove_inner.pyx":35
+    /* "glovepy/glove_inner.pyx":36
  * 
- *         diff = 0.0;
+ *         diff  = 0.0
+ *         diff_ = 0.0             # <<<<<<<<<<<<<<
+ *         for b in range(vector_size):
+ *             diff  += W[b + l1]  * W[b + l2] # dot product of word and context word vector
+ */
+    __pyx_v_diff_ = 0.0;
+
+    /* "glovepy/glove_inner.pyx":37
+ *         diff  = 0.0
+ *         diff_ = 0.0
  *         for b in range(vector_size):             # <<<<<<<<<<<<<<
- *             diff += W[b + l1] * ContextW[b + l2] # dot product of word and context word vector
- *         diff += bias[job_key[example_idx]] + ContextB[job_subkey[example_idx]] - log(job_target[example_idx]) # add separate bias for each word
+ *             diff  += W[b + l1]  * W[b + l2] # dot product of word and context word vector
+ *             diff_ += W_[b + l1] * W_[b + l2]
  */
     __pyx_t_3 = __pyx_v_vector_size;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_b = __pyx_t_4;
 
-      /* "glovepy/glove_inner.pyx":36
- *         diff = 0.0;
+      /* "glovepy/glove_inner.pyx":38
+ *         diff_ = 0.0
  *         for b in range(vector_size):
- *             diff += W[b + l1] * ContextW[b + l2] # dot product of word and context word vector             # <<<<<<<<<<<<<<
- *         diff += bias[job_key[example_idx]] + ContextB[job_subkey[example_idx]] - log(job_target[example_idx]) # add separate bias for each word
- *         fdiff = diff if (job_target[example_idx] > x_max) else pow(job_target[example_idx] / x_max, alpha) * diff # multiply weighting function (f) with diff
+ *             diff  += W[b + l1]  * W[b + l2] # dot product of word and context word vector             # <<<<<<<<<<<<<<
+ *             diff_ += W_[b + l1] * W_[b + l2]
+ * 
  */
-      __pyx_v_diff = (__pyx_v_diff + ((__pyx_v_W[(__pyx_v_b + __pyx_v_l1)]) * (__pyx_v_ContextW[(__pyx_v_b + __pyx_v_l2)])));
+      __pyx_v_diff = (__pyx_v_diff + ((__pyx_v_W[(__pyx_v_b + __pyx_v_l1)]) * (__pyx_v_W[(__pyx_v_b + __pyx_v_l2)])));
+
+      /* "glovepy/glove_inner.pyx":39
+ *         for b in range(vector_size):
+ *             diff  += W[b + l1]  * W[b + l2] # dot product of word and context word vector
+ *             diff_ += W_[b + l1] * W_[b + l2]             # <<<<<<<<<<<<<<
+ * 
+ *         # add separate bias for each word
+ */
+      __pyx_v_diff_ = (__pyx_v_diff_ + ((__pyx_v_W_[(__pyx_v_b + __pyx_v_l1)]) * (__pyx_v_W_[(__pyx_v_b + __pyx_v_l2)])));
     }
 
-    /* "glovepy/glove_inner.pyx":37
- *         for b in range(vector_size):
- *             diff += W[b + l1] * ContextW[b + l2] # dot product of word and context word vector
- *         diff += bias[job_key[example_idx]] + ContextB[job_subkey[example_idx]] - log(job_target[example_idx]) # add separate bias for each word             # <<<<<<<<<<<<<<
- *         fdiff = diff if (job_target[example_idx] > x_max) else pow(job_target[example_idx] / x_max, alpha) * diff # multiply weighting function (f) with diff
- *         error[0] += 0.5 * fdiff * diff # weighted squared error
+    /* "glovepy/glove_inner.pyx":42
+ * 
+ *         # add separate bias for each word
+ *         diff   += bias[job_key[example_idx]]  + bias[job_subkey[example_idx]]  - log(job_target[example_idx])             # <<<<<<<<<<<<<<
+ *         diff_  += bias_[job_key[example_idx]] + bias_[job_subkey[example_idx]] - log(job_target[example_idx])
+ * 
  */
-    __pyx_v_diff = (__pyx_v_diff + (((__pyx_v_bias[(__pyx_v_job_key[__pyx_v_example_idx])]) + (__pyx_v_ContextB[(__pyx_v_job_subkey[__pyx_v_example_idx])])) - log((__pyx_v_job_target[__pyx_v_example_idx]))));
+    __pyx_v_diff = (__pyx_v_diff + (((__pyx_v_bias[(__pyx_v_job_key[__pyx_v_example_idx])]) + (__pyx_v_bias[(__pyx_v_job_subkey[__pyx_v_example_idx])])) - log((__pyx_v_job_target[__pyx_v_example_idx]))));
 
-    /* "glovepy/glove_inner.pyx":38
- *             diff += W[b + l1] * ContextW[b + l2] # dot product of word and context word vector
- *         diff += bias[job_key[example_idx]] + ContextB[job_subkey[example_idx]] - log(job_target[example_idx]) # add separate bias for each word
- *         fdiff = diff if (job_target[example_idx] > x_max) else pow(job_target[example_idx] / x_max, alpha) * diff # multiply weighting function (f) with diff             # <<<<<<<<<<<<<<
- *         error[0] += 0.5 * fdiff * diff # weighted squared error
+    /* "glovepy/glove_inner.pyx":43
+ *         # add separate bias for each word
+ *         diff   += bias[job_key[example_idx]]  + bias[job_subkey[example_idx]]  - log(job_target[example_idx])
+ *         diff_  += bias_[job_key[example_idx]] + bias_[job_subkey[example_idx]] - log(job_target[example_idx])             # <<<<<<<<<<<<<<
+ * 
+ *         # multiply weighting function (f) with diff
+ */
+    __pyx_v_diff_ = (__pyx_v_diff_ + (((__pyx_v_bias_[(__pyx_v_job_key[__pyx_v_example_idx])]) + (__pyx_v_bias_[(__pyx_v_job_subkey[__pyx_v_example_idx])])) - log((__pyx_v_job_target[__pyx_v_example_idx]))));
+
+    /* "glovepy/glove_inner.pyx":46
+ * 
+ *         # multiply weighting function (f) with diff
+ *         fdiff  = diff  if (job_target[example_idx] > x_max) else pow(job_target[example_idx] / x_max, alpha) * diff             # <<<<<<<<<<<<<<
+ *         fdiff_ = diff_ if (job_target[example_idx] > x_max) else pow(job_target[example_idx] / x_max, alpha) * diff_
  * 
  */
     if ((((__pyx_v_job_target[__pyx_v_example_idx]) > __pyx_v_x_max) != 0)) {
@@ -1646,182 +1671,341 @@ static void __pyx_f_7glovepy_11glove_inner_train_glove_thread(__pyx_t_7glovepy_1
     }
     __pyx_v_fdiff = __pyx_t_5;
 
-    /* "glovepy/glove_inner.pyx":39
- *         diff += bias[job_key[example_idx]] + ContextB[job_subkey[example_idx]] - log(job_target[example_idx]) # add separate bias for each word
- *         fdiff = diff if (job_target[example_idx] > x_max) else pow(job_target[example_idx] / x_max, alpha) * diff # multiply weighting function (f) with diff
- *         error[0] += 0.5 * fdiff * diff # weighted squared error             # <<<<<<<<<<<<<<
+    /* "glovepy/glove_inner.pyx":47
+ *         # multiply weighting function (f) with diff
+ *         fdiff  = diff  if (job_target[example_idx] > x_max) else pow(job_target[example_idx] / x_max, alpha) * diff
+ *         fdiff_ = diff_ if (job_target[example_idx] > x_max) else pow(job_target[example_idx] / x_max, alpha) * diff_             # <<<<<<<<<<<<<<
  * 
- *         # # Adaptive gradient updates
+ *         # Check for NaN in the diffs, skip updating if caught NaN in diffs
  */
-    __pyx_t_6 = 0;
-    (__pyx_v_error[__pyx_t_6]) = ((__pyx_v_error[__pyx_t_6]) + ((0.5 * __pyx_v_fdiff) * __pyx_v_diff));
+    if ((((__pyx_v_job_target[__pyx_v_example_idx]) > __pyx_v_x_max) != 0)) {
+      __pyx_t_5 = __pyx_v_diff_;
+    } else {
+      __pyx_t_5 = (pow(((__pyx_v_job_target[__pyx_v_example_idx]) / __pyx_v_x_max), __pyx_v_alpha) * __pyx_v_diff_);
+    }
+    __pyx_v_fdiff_ = __pyx_t_5;
 
-    /* "glovepy/glove_inner.pyx":42
+    /* "glovepy/glove_inner.pyx":50
  * 
- *         # # Adaptive gradient updates
- *         fdiff *= step_size # for ease in calculating gradient             # <<<<<<<<<<<<<<
- *         for b in range(vector_size):
- *             # learning rate times gradient for word vectors
+ *         # Check for NaN in the diffs, skip updating if caught NaN in diffs
+ *         if isnan(diff) or isnan(fdiff) or isnan(diff_) or isnan(fdiff_):             # <<<<<<<<<<<<<<
+ *             continue
+ * 
+ */
+    __pyx_t_7 = (isnan(__pyx_v_diff) != 0);
+    if (!__pyx_t_7) {
+    } else {
+      __pyx_t_6 = __pyx_t_7;
+      goto __pyx_L8_bool_binop_done;
+    }
+    __pyx_t_7 = (isnan(__pyx_v_fdiff) != 0);
+    if (!__pyx_t_7) {
+    } else {
+      __pyx_t_6 = __pyx_t_7;
+      goto __pyx_L8_bool_binop_done;
+    }
+    __pyx_t_7 = (isnan(__pyx_v_diff_) != 0);
+    if (!__pyx_t_7) {
+    } else {
+      __pyx_t_6 = __pyx_t_7;
+      goto __pyx_L8_bool_binop_done;
+    }
+    __pyx_t_7 = (isnan(__pyx_v_fdiff_) != 0);
+    __pyx_t_6 = __pyx_t_7;
+    __pyx_L8_bool_binop_done:;
+    if (__pyx_t_6) {
+
+      /* "glovepy/glove_inner.pyx":51
+ *         # Check for NaN in the diffs, skip updating if caught NaN in diffs
+ *         if isnan(diff) or isnan(fdiff) or isnan(diff_) or isnan(fdiff_):
+ *             continue             # <<<<<<<<<<<<<<
+ * 
+ *         # weighted squared error, only get the error from the first solution
+ */
+      goto __pyx_L3_continue;
+
+      /* "glovepy/glove_inner.pyx":50
+ * 
+ *         # Check for NaN in the diffs, skip updating if caught NaN in diffs
+ *         if isnan(diff) or isnan(fdiff) or isnan(diff_) or isnan(fdiff_):             # <<<<<<<<<<<<<<
+ *             continue
+ * 
+ */
+    }
+
+    /* "glovepy/glove_inner.pyx":54
+ * 
+ *         # weighted squared error, only get the error from the first solution
+ *         error[0] += 0.5 * fdiff * diff             # <<<<<<<<<<<<<<
+ * 
+ *         # Adaptive gradient updates
+ */
+    __pyx_t_8 = 0;
+    (__pyx_v_error[__pyx_t_8]) = ((__pyx_v_error[__pyx_t_8]) + ((0.5 * __pyx_v_fdiff) * __pyx_v_diff));
+
+    /* "glovepy/glove_inner.pyx":57
+ * 
+ *         # Adaptive gradient updates
+ *         fdiff  *= step_size    # for ease in calculating gradient             # <<<<<<<<<<<<<<
+ *         fdiff_ *= step_size
+ * 
  */
     __pyx_v_fdiff = (__pyx_v_fdiff * __pyx_v_step_size);
 
-    /* "glovepy/glove_inner.pyx":43
- *         # # Adaptive gradient updates
- *         fdiff *= step_size # for ease in calculating gradient
+    /* "glovepy/glove_inner.pyx":58
+ *         # Adaptive gradient updates
+ *         fdiff  *= step_size    # for ease in calculating gradient
+ *         fdiff_ *= step_size             # <<<<<<<<<<<<<<
+ * 
+ *         for b in range(vector_size):
+ */
+    __pyx_v_fdiff_ = (__pyx_v_fdiff_ * __pyx_v_step_size);
+
+    /* "glovepy/glove_inner.pyx":60
+ *         fdiff_ *= step_size
+ * 
  *         for b in range(vector_size):             # <<<<<<<<<<<<<<
  *             # learning rate times gradient for word vectors
- *             temp1 = fdiff * ContextW[b + l2]
+ *             temp1  = fdiff  * W[b + l2]
  */
     __pyx_t_3 = __pyx_v_vector_size;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_b = __pyx_t_4;
 
-      /* "glovepy/glove_inner.pyx":45
+      /* "glovepy/glove_inner.pyx":62
  *         for b in range(vector_size):
  *             # learning rate times gradient for word vectors
- *             temp1 = fdiff * ContextW[b + l2]             # <<<<<<<<<<<<<<
- *             temp2 = fdiff * W[b + l1]
- *             # adaptive updates
+ *             temp1  = fdiff  * W[b + l2]             # <<<<<<<<<<<<<<
+ *             temp2  = fdiff  * W[b + l1]
+ *             temp1_ = fdiff_ * W_[b + l2]
  */
-      __pyx_v_temp1 = (__pyx_v_fdiff * (__pyx_v_ContextW[(__pyx_v_b + __pyx_v_l2)]));
+      __pyx_v_temp1 = (__pyx_v_fdiff * (__pyx_v_W[(__pyx_v_b + __pyx_v_l2)]));
 
-      /* "glovepy/glove_inner.pyx":46
+      /* "glovepy/glove_inner.pyx":63
  *             # learning rate times gradient for word vectors
- *             temp1 = fdiff * ContextW[b + l2]
- *             temp2 = fdiff * W[b + l1]             # <<<<<<<<<<<<<<
- *             # adaptive updates
- *             W[b + l1]              -= (temp1 / sqrt(gradsqW[b + l1]))
+ *             temp1  = fdiff  * W[b + l2]
+ *             temp2  = fdiff  * W[b + l1]             # <<<<<<<<<<<<<<
+ *             temp1_ = fdiff_ * W_[b + l2]
+ *             temp2_ = fdiff_ * W_[b + l1]
  */
       __pyx_v_temp2 = (__pyx_v_fdiff * (__pyx_v_W[(__pyx_v_b + __pyx_v_l1)]));
 
-      /* "glovepy/glove_inner.pyx":48
- *             temp2 = fdiff * W[b + l1]
+      /* "glovepy/glove_inner.pyx":64
+ *             temp1  = fdiff  * W[b + l2]
+ *             temp2  = fdiff  * W[b + l1]
+ *             temp1_ = fdiff_ * W_[b + l2]             # <<<<<<<<<<<<<<
+ *             temp2_ = fdiff_ * W_[b + l1]
+ * 
+ */
+      __pyx_v_temp1_ = (__pyx_v_fdiff_ * (__pyx_v_W_[(__pyx_v_b + __pyx_v_l2)]));
+
+      /* "glovepy/glove_inner.pyx":65
+ *             temp2  = fdiff  * W[b + l1]
+ *             temp1_ = fdiff_ * W_[b + l2]
+ *             temp2_ = fdiff_ * W_[b + l1]             # <<<<<<<<<<<<<<
+ * 
  *             # adaptive updates
- *             W[b + l1]              -= (temp1 / sqrt(gradsqW[b + l1]))             # <<<<<<<<<<<<<<
- *             W[b + l2]              -= (temp2 / sqrt(gradsqW[b + l2]))
- *             ContextW[b + l1]       -= (temp1 / sqrt(gradsqContextW[b + l1]))
  */
-      __pyx_t_7 = (__pyx_v_b + __pyx_v_l1);
-      (__pyx_v_W[__pyx_t_7]) = ((__pyx_v_W[__pyx_t_7]) - (__pyx_v_temp1 / sqrt((__pyx_v_gradsqW[(__pyx_v_b + __pyx_v_l1)]))));
+      __pyx_v_temp2_ = (__pyx_v_fdiff_ * (__pyx_v_W_[(__pyx_v_b + __pyx_v_l1)]));
 
-      /* "glovepy/glove_inner.pyx":49
+      /* "glovepy/glove_inner.pyx":68
+ * 
  *             # adaptive updates
- *             W[b + l1]              -= (temp1 / sqrt(gradsqW[b + l1]))
- *             W[b + l2]              -= (temp2 / sqrt(gradsqW[b + l2]))             # <<<<<<<<<<<<<<
- *             ContextW[b + l1]       -= (temp1 / sqrt(gradsqContextW[b + l1]))
- *             ContextW[b + l2]       -= (temp2 / sqrt(gradsqContextW[b + l2]))
+ *             W[b + l1]              -= (temp1  / sqrt(gradsqW[b + l1]))             # <<<<<<<<<<<<<<
+ *             W[b + l2]              -= (temp2  / sqrt(gradsqW[b + l2]))
+ *             W_[b + l1]             -= (temp1_ / sqrt(gradsqW_[b + l1]))
  */
-      __pyx_t_7 = (__pyx_v_b + __pyx_v_l2);
-      (__pyx_v_W[__pyx_t_7]) = ((__pyx_v_W[__pyx_t_7]) - (__pyx_v_temp2 / sqrt((__pyx_v_gradsqW[(__pyx_v_b + __pyx_v_l2)]))));
+      __pyx_t_9 = (__pyx_v_b + __pyx_v_l1);
+      (__pyx_v_W[__pyx_t_9]) = ((__pyx_v_W[__pyx_t_9]) - (__pyx_v_temp1 / sqrt((__pyx_v_gradsqW[(__pyx_v_b + __pyx_v_l1)]))));
 
-      /* "glovepy/glove_inner.pyx":50
- *             W[b + l1]              -= (temp1 / sqrt(gradsqW[b + l1]))
- *             W[b + l2]              -= (temp2 / sqrt(gradsqW[b + l2]))
- *             ContextW[b + l1]       -= (temp1 / sqrt(gradsqContextW[b + l1]))             # <<<<<<<<<<<<<<
- *             ContextW[b + l2]       -= (temp2 / sqrt(gradsqContextW[b + l2]))
- *             gradsqW[b + l1]        += temp1 * temp1
+      /* "glovepy/glove_inner.pyx":69
+ *             # adaptive updates
+ *             W[b + l1]              -= (temp1  / sqrt(gradsqW[b + l1]))
+ *             W[b + l2]              -= (temp2  / sqrt(gradsqW[b + l2]))             # <<<<<<<<<<<<<<
+ *             W_[b + l1]             -= (temp1_ / sqrt(gradsqW_[b + l1]))
+ *             W_[b + l2]             -= (temp2_ / sqrt(gradsqW_[b + l2]))
  */
-      __pyx_t_7 = (__pyx_v_b + __pyx_v_l1);
-      (__pyx_v_ContextW[__pyx_t_7]) = ((__pyx_v_ContextW[__pyx_t_7]) - (__pyx_v_temp1 / sqrt((__pyx_v_gradsqContextW[(__pyx_v_b + __pyx_v_l1)]))));
+      __pyx_t_9 = (__pyx_v_b + __pyx_v_l2);
+      (__pyx_v_W[__pyx_t_9]) = ((__pyx_v_W[__pyx_t_9]) - (__pyx_v_temp2 / sqrt((__pyx_v_gradsqW[(__pyx_v_b + __pyx_v_l2)]))));
 
-      /* "glovepy/glove_inner.pyx":51
- *             W[b + l2]              -= (temp2 / sqrt(gradsqW[b + l2]))
- *             ContextW[b + l1]       -= (temp1 / sqrt(gradsqContextW[b + l1]))
- *             ContextW[b + l2]       -= (temp2 / sqrt(gradsqContextW[b + l2]))             # <<<<<<<<<<<<<<
- *             gradsqW[b + l1]        += temp1 * temp1
- *             gradsqContextW[b + l2] += temp2 * temp2
+      /* "glovepy/glove_inner.pyx":70
+ *             W[b + l1]              -= (temp1  / sqrt(gradsqW[b + l1]))
+ *             W[b + l2]              -= (temp2  / sqrt(gradsqW[b + l2]))
+ *             W_[b + l1]             -= (temp1_ / sqrt(gradsqW_[b + l1]))             # <<<<<<<<<<<<<<
+ *             W_[b + l2]             -= (temp2_ / sqrt(gradsqW_[b + l2]))
+ *             gradsqW[b + l1]        += temp1  * temp1
  */
-      __pyx_t_7 = (__pyx_v_b + __pyx_v_l2);
-      (__pyx_v_ContextW[__pyx_t_7]) = ((__pyx_v_ContextW[__pyx_t_7]) - (__pyx_v_temp2 / sqrt((__pyx_v_gradsqContextW[(__pyx_v_b + __pyx_v_l2)]))));
+      __pyx_t_9 = (__pyx_v_b + __pyx_v_l1);
+      (__pyx_v_W_[__pyx_t_9]) = ((__pyx_v_W_[__pyx_t_9]) - (__pyx_v_temp1_ / sqrt((__pyx_v_gradsqW_[(__pyx_v_b + __pyx_v_l1)]))));
 
-      /* "glovepy/glove_inner.pyx":52
- *             ContextW[b + l1]       -= (temp1 / sqrt(gradsqContextW[b + l1]))
- *             ContextW[b + l2]       -= (temp2 / sqrt(gradsqContextW[b + l2]))
- *             gradsqW[b + l1]        += temp1 * temp1             # <<<<<<<<<<<<<<
- *             gradsqContextW[b + l2] += temp2 * temp2
+      /* "glovepy/glove_inner.pyx":71
+ *             W[b + l2]              -= (temp2  / sqrt(gradsqW[b + l2]))
+ *             W_[b + l1]             -= (temp1_ / sqrt(gradsqW_[b + l1]))
+ *             W_[b + l2]             -= (temp2_ / sqrt(gradsqW_[b + l2]))             # <<<<<<<<<<<<<<
+ *             gradsqW[b + l1]        += temp1  * temp1
+ *             gradsqW[b + l2]        += temp2  * temp2
+ */
+      __pyx_t_9 = (__pyx_v_b + __pyx_v_l2);
+      (__pyx_v_W_[__pyx_t_9]) = ((__pyx_v_W_[__pyx_t_9]) - (__pyx_v_temp2_ / sqrt((__pyx_v_gradsqW_[(__pyx_v_b + __pyx_v_l2)]))));
+
+      /* "glovepy/glove_inner.pyx":72
+ *             W_[b + l1]             -= (temp1_ / sqrt(gradsqW_[b + l1]))
+ *             W_[b + l2]             -= (temp2_ / sqrt(gradsqW_[b + l2]))
+ *             gradsqW[b + l1]        += temp1  * temp1             # <<<<<<<<<<<<<<
+ *             gradsqW[b + l2]        += temp2  * temp2
+ *             gradsqW_[b + l1]       += temp1_ * temp1_
+ */
+      __pyx_t_9 = (__pyx_v_b + __pyx_v_l1);
+      (__pyx_v_gradsqW[__pyx_t_9]) = ((__pyx_v_gradsqW[__pyx_t_9]) + (__pyx_v_temp1 * __pyx_v_temp1));
+
+      /* "glovepy/glove_inner.pyx":73
+ *             W_[b + l2]             -= (temp2_ / sqrt(gradsqW_[b + l2]))
+ *             gradsqW[b + l1]        += temp1  * temp1
+ *             gradsqW[b + l2]        += temp2  * temp2             # <<<<<<<<<<<<<<
+ *             gradsqW_[b + l1]       += temp1_ * temp1_
+ *             gradsqW_[b + l2]       += temp2_ * temp2_
+ */
+      __pyx_t_9 = (__pyx_v_b + __pyx_v_l2);
+      (__pyx_v_gradsqW[__pyx_t_9]) = ((__pyx_v_gradsqW[__pyx_t_9]) + (__pyx_v_temp2 * __pyx_v_temp2));
+
+      /* "glovepy/glove_inner.pyx":74
+ *             gradsqW[b + l1]        += temp1  * temp1
+ *             gradsqW[b + l2]        += temp2  * temp2
+ *             gradsqW_[b + l1]       += temp1_ * temp1_             # <<<<<<<<<<<<<<
+ *             gradsqW_[b + l2]       += temp2_ * temp2_
+ * 
+ */
+      __pyx_t_9 = (__pyx_v_b + __pyx_v_l1);
+      (__pyx_v_gradsqW_[__pyx_t_9]) = ((__pyx_v_gradsqW_[__pyx_t_9]) + (__pyx_v_temp1_ * __pyx_v_temp1_));
+
+      /* "glovepy/glove_inner.pyx":75
+ *             gradsqW[b + l2]        += temp2  * temp2
+ *             gradsqW_[b + l1]       += temp1_ * temp1_
+ *             gradsqW_[b + l2]       += temp2_ * temp2_             # <<<<<<<<<<<<<<
+ * 
  *         # updates for bias terms
  */
-      __pyx_t_7 = (__pyx_v_b + __pyx_v_l1);
-      (__pyx_v_gradsqW[__pyx_t_7]) = ((__pyx_v_gradsqW[__pyx_t_7]) + (__pyx_v_temp1 * __pyx_v_temp1));
-
-      /* "glovepy/glove_inner.pyx":53
- *             ContextW[b + l2]       -= (temp2 / sqrt(gradsqContextW[b + l2]))
- *             gradsqW[b + l1]        += temp1 * temp1
- *             gradsqContextW[b + l2] += temp2 * temp2             # <<<<<<<<<<<<<<
- *         # updates for bias terms
- *         bias[job_key[example_idx]]        -= fdiff / sqrt(gradsqb[job_key[example_idx]]);
- */
-      __pyx_t_7 = (__pyx_v_b + __pyx_v_l2);
-      (__pyx_v_gradsqContextW[__pyx_t_7]) = ((__pyx_v_gradsqContextW[__pyx_t_7]) + (__pyx_v_temp2 * __pyx_v_temp2));
+      __pyx_t_9 = (__pyx_v_b + __pyx_v_l2);
+      (__pyx_v_gradsqW_[__pyx_t_9]) = ((__pyx_v_gradsqW_[__pyx_t_9]) + (__pyx_v_temp2_ * __pyx_v_temp2_));
     }
 
-    /* "glovepy/glove_inner.pyx":55
- *             gradsqContextW[b + l2] += temp2 * temp2
+    /* "glovepy/glove_inner.pyx":78
+ * 
  *         # updates for bias terms
- *         bias[job_key[example_idx]]        -= fdiff / sqrt(gradsqb[job_key[example_idx]]);             # <<<<<<<<<<<<<<
- *         ContextB[job_subkey[example_idx]] -= fdiff / sqrt(gradsqContextB[job_subkey[example_idx]]);
+ *         bias[job_key[example_idx]]        -= fdiff  / sqrt(gradsqb[job_key[example_idx]])             # <<<<<<<<<<<<<<
+ *         bias[job_subkey[example_idx]]     -= fdiff  / sqrt(gradsqb[job_subkey[example_idx]])
+ *         bias_[job_key[example_idx]]       -= fdiff_ / sqrt(gradsqb_[job_key[example_idx]])
+ */
+    __pyx_t_10 = (__pyx_v_job_key[__pyx_v_example_idx]);
+    (__pyx_v_bias[__pyx_t_10]) = ((__pyx_v_bias[__pyx_t_10]) - (__pyx_v_fdiff / sqrt((__pyx_v_gradsqb[(__pyx_v_job_key[__pyx_v_example_idx])]))));
+
+    /* "glovepy/glove_inner.pyx":79
+ *         # updates for bias terms
+ *         bias[job_key[example_idx]]        -= fdiff  / sqrt(gradsqb[job_key[example_idx]])
+ *         bias[job_subkey[example_idx]]     -= fdiff  / sqrt(gradsqb[job_subkey[example_idx]])             # <<<<<<<<<<<<<<
+ *         bias_[job_key[example_idx]]       -= fdiff_ / sqrt(gradsqb_[job_key[example_idx]])
+ *         bias_[job_subkey[example_idx]]    -= fdiff_ / sqrt(gradsqb_[job_subkey[example_idx]])
+ */
+    __pyx_t_10 = (__pyx_v_job_subkey[__pyx_v_example_idx]);
+    (__pyx_v_bias[__pyx_t_10]) = ((__pyx_v_bias[__pyx_t_10]) - (__pyx_v_fdiff / sqrt((__pyx_v_gradsqb[(__pyx_v_job_subkey[__pyx_v_example_idx])]))));
+
+    /* "glovepy/glove_inner.pyx":80
+ *         bias[job_key[example_idx]]        -= fdiff  / sqrt(gradsqb[job_key[example_idx]])
+ *         bias[job_subkey[example_idx]]     -= fdiff  / sqrt(gradsqb[job_subkey[example_idx]])
+ *         bias_[job_key[example_idx]]       -= fdiff_ / sqrt(gradsqb_[job_key[example_idx]])             # <<<<<<<<<<<<<<
+ *         bias_[job_subkey[example_idx]]    -= fdiff_ / sqrt(gradsqb_[job_subkey[example_idx]])
  * 
  */
-    __pyx_t_8 = (__pyx_v_job_key[__pyx_v_example_idx]);
-    (__pyx_v_bias[__pyx_t_8]) = ((__pyx_v_bias[__pyx_t_8]) - (__pyx_v_fdiff / sqrt((__pyx_v_gradsqb[(__pyx_v_job_key[__pyx_v_example_idx])]))));
+    __pyx_t_10 = (__pyx_v_job_key[__pyx_v_example_idx]);
+    (__pyx_v_bias_[__pyx_t_10]) = ((__pyx_v_bias_[__pyx_t_10]) - (__pyx_v_fdiff_ / sqrt((__pyx_v_gradsqb_[(__pyx_v_job_key[__pyx_v_example_idx])]))));
 
-    /* "glovepy/glove_inner.pyx":56
- *         # updates for bias terms
- *         bias[job_key[example_idx]]        -= fdiff / sqrt(gradsqb[job_key[example_idx]]);
- *         ContextB[job_subkey[example_idx]] -= fdiff / sqrt(gradsqContextB[job_subkey[example_idx]]);             # <<<<<<<<<<<<<<
+    /* "glovepy/glove_inner.pyx":81
+ *         bias[job_subkey[example_idx]]     -= fdiff  / sqrt(gradsqb[job_subkey[example_idx]])
+ *         bias_[job_key[example_idx]]       -= fdiff_ / sqrt(gradsqb_[job_key[example_idx]])
+ *         bias_[job_subkey[example_idx]]    -= fdiff_ / sqrt(gradsqb_[job_subkey[example_idx]])             # <<<<<<<<<<<<<<
  * 
- *         fdiff *= fdiff;
+ *         fdiff  *= fdiff
  */
-    __pyx_t_8 = (__pyx_v_job_subkey[__pyx_v_example_idx]);
-    (__pyx_v_ContextB[__pyx_t_8]) = ((__pyx_v_ContextB[__pyx_t_8]) - (__pyx_v_fdiff / sqrt((__pyx_v_gradsqContextB[(__pyx_v_job_subkey[__pyx_v_example_idx])]))));
+    __pyx_t_10 = (__pyx_v_job_subkey[__pyx_v_example_idx]);
+    (__pyx_v_bias_[__pyx_t_10]) = ((__pyx_v_bias_[__pyx_t_10]) - (__pyx_v_fdiff_ / sqrt((__pyx_v_gradsqb_[(__pyx_v_job_subkey[__pyx_v_example_idx])]))));
 
-    /* "glovepy/glove_inner.pyx":58
- *         ContextB[job_subkey[example_idx]] -= fdiff / sqrt(gradsqContextB[job_subkey[example_idx]]);
+    /* "glovepy/glove_inner.pyx":83
+ *         bias_[job_subkey[example_idx]]    -= fdiff_ / sqrt(gradsqb_[job_subkey[example_idx]])
  * 
- *         fdiff *= fdiff;             # <<<<<<<<<<<<<<
- *         gradsqb[job_key[example_idx]]           += fdiff
- *         gradsqContextB[job_subkey[example_idx]] += fdiff
+ *         fdiff  *= fdiff             # <<<<<<<<<<<<<<
+ *         fdiff_ *= fdiff_
+ *         gradsqb[job_key[example_idx]]         += fdiff
  */
     __pyx_v_fdiff = (__pyx_v_fdiff * __pyx_v_fdiff);
 
-    /* "glovepy/glove_inner.pyx":59
+    /* "glovepy/glove_inner.pyx":84
  * 
- *         fdiff *= fdiff;
- *         gradsqb[job_key[example_idx]]           += fdiff             # <<<<<<<<<<<<<<
- *         gradsqContextB[job_subkey[example_idx]] += fdiff
- * 
+ *         fdiff  *= fdiff
+ *         fdiff_ *= fdiff_             # <<<<<<<<<<<<<<
+ *         gradsqb[job_key[example_idx]]         += fdiff
+ *         gradsqb[job_subkey[example_idx]]      += fdiff
  */
-    __pyx_t_8 = (__pyx_v_job_key[__pyx_v_example_idx]);
-    (__pyx_v_gradsqb[__pyx_t_8]) = ((__pyx_v_gradsqb[__pyx_t_8]) + __pyx_v_fdiff);
+    __pyx_v_fdiff_ = (__pyx_v_fdiff_ * __pyx_v_fdiff_);
 
-    /* "glovepy/glove_inner.pyx":60
- *         fdiff *= fdiff;
- *         gradsqb[job_key[example_idx]]           += fdiff
- *         gradsqContextB[job_subkey[example_idx]] += fdiff             # <<<<<<<<<<<<<<
+    /* "glovepy/glove_inner.pyx":85
+ *         fdiff  *= fdiff
+ *         fdiff_ *= fdiff_
+ *         gradsqb[job_key[example_idx]]         += fdiff             # <<<<<<<<<<<<<<
+ *         gradsqb[job_subkey[example_idx]]      += fdiff
+ *         gradsqb_[job_key[example_idx]]        += fdiff_
+ */
+    __pyx_t_10 = (__pyx_v_job_key[__pyx_v_example_idx]);
+    (__pyx_v_gradsqb[__pyx_t_10]) = ((__pyx_v_gradsqb[__pyx_t_10]) + __pyx_v_fdiff);
+
+    /* "glovepy/glove_inner.pyx":86
+ *         fdiff_ *= fdiff_
+ *         gradsqb[job_key[example_idx]]         += fdiff
+ *         gradsqb[job_subkey[example_idx]]      += fdiff             # <<<<<<<<<<<<<<
+ *         gradsqb_[job_key[example_idx]]        += fdiff_
+ *         gradsqb_[job_subkey[example_idx]]     += fdiff_
+ */
+    __pyx_t_10 = (__pyx_v_job_subkey[__pyx_v_example_idx]);
+    (__pyx_v_gradsqb[__pyx_t_10]) = ((__pyx_v_gradsqb[__pyx_t_10]) + __pyx_v_fdiff);
+
+    /* "glovepy/glove_inner.pyx":87
+ *         gradsqb[job_key[example_idx]]         += fdiff
+ *         gradsqb[job_subkey[example_idx]]      += fdiff
+ *         gradsqb_[job_key[example_idx]]        += fdiff_             # <<<<<<<<<<<<<<
+ *         gradsqb_[job_subkey[example_idx]]     += fdiff_
+ * 
+ */
+    __pyx_t_10 = (__pyx_v_job_key[__pyx_v_example_idx]);
+    (__pyx_v_gradsqb_[__pyx_t_10]) = ((__pyx_v_gradsqb_[__pyx_t_10]) + __pyx_v_fdiff_);
+
+    /* "glovepy/glove_inner.pyx":88
+ *         gradsqb[job_subkey[example_idx]]      += fdiff
+ *         gradsqb_[job_key[example_idx]]        += fdiff_
+ *         gradsqb_[job_subkey[example_idx]]     += fdiff_             # <<<<<<<<<<<<<<
  * 
  * 
  */
-    __pyx_t_8 = (__pyx_v_job_subkey[__pyx_v_example_idx]);
-    (__pyx_v_gradsqContextB[__pyx_t_8]) = ((__pyx_v_gradsqContextB[__pyx_t_8]) + __pyx_v_fdiff);
+    __pyx_t_10 = (__pyx_v_job_subkey[__pyx_v_example_idx]);
+    (__pyx_v_gradsqb_[__pyx_t_10]) = ((__pyx_v_gradsqb_[__pyx_t_10]) + __pyx_v_fdiff_);
+    __pyx_L3_continue:;
   }
 
   /* "glovepy/glove_inner.pyx":16
  * ctypedef np.uint32_t  INT_t
  * 
  * cdef void train_glove_thread(             # <<<<<<<<<<<<<<
- *         REAL_t * W,       REAL_t * ContextW,
- *         REAL_t * gradsqW, REAL_t * gradsqContextW,
+ *         REAL_t * W,          REAL_t * W_,
+ *         REAL_t * gradsqW,    REAL_t * gradsqW_,
  */
 
   /* function exit code */
 }
 
-/* "glovepy/glove_inner.pyx":63
+/* "glovepy/glove_inner.pyx":91
  * 
  * 
  * def train_glove(model, jobs, float _step_size, _error):             # <<<<<<<<<<<<<<
  *     cdef REAL_t *W              = <REAL_t *>(np.PyArray_DATA(model.W))
- *     cdef REAL_t *ContextW       = <REAL_t *>(np.PyArray_DATA(model.W_))
+ *     cdef REAL_t *W_             = <REAL_t *>(np.PyArray_DATA(model.W_))
  */
 
 /* Python wrapper */
@@ -1862,23 +2046,23 @@ static PyObject *__pyx_pw_7glovepy_11glove_inner_1train_glove(PyObject *__pyx_se
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_jobs)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("train_glove", 1, 4, 4, 1); __PYX_ERR(0, 63, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("train_glove", 1, 4, 4, 1); __PYX_ERR(0, 91, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_step_size)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("train_glove", 1, 4, 4, 2); __PYX_ERR(0, 63, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("train_glove", 1, 4, 4, 2); __PYX_ERR(0, 91, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_error)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("train_glove", 1, 4, 4, 3); __PYX_ERR(0, 63, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("train_glove", 1, 4, 4, 3); __PYX_ERR(0, 91, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "train_glove") < 0)) __PYX_ERR(0, 63, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "train_glove") < 0)) __PYX_ERR(0, 91, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -1890,12 +2074,12 @@ static PyObject *__pyx_pw_7glovepy_11glove_inner_1train_glove(PyObject *__pyx_se
     }
     __pyx_v_model = values[0];
     __pyx_v_jobs = values[1];
-    __pyx_v__step_size = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v__step_size == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 63, __pyx_L3_error)
+    __pyx_v__step_size = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v__step_size == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 91, __pyx_L3_error)
     __pyx_v__error = values[3];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("train_glove", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 63, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("train_glove", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 91, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("glovepy.glove_inner.train_glove", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -1910,13 +2094,13 @@ static PyObject *__pyx_pw_7glovepy_11glove_inner_1train_glove(PyObject *__pyx_se
 
 static PyObject *__pyx_pf_7glovepy_11glove_inner_train_glove(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_model, PyObject *__pyx_v_jobs, float __pyx_v__step_size, PyObject *__pyx_v__error) {
   __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_W;
-  __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_ContextW;
+  __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_W_;
   __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqW;
-  __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqContextW;
+  __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqW_;
   __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_b;
-  __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_ContextB;
+  __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_b_;
   __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqb;
-  __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqContextB;
+  __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_gradsqb_;
   __pyx_t_7glovepy_11glove_inner_REAL_t *__pyx_v_error;
   __pyx_t_7glovepy_11glove_inner_INT_t *__pyx_v_job_key;
   __pyx_t_7glovepy_11glove_inner_INT_t *__pyx_v_job_subkey;
@@ -1934,221 +2118,221 @@ static PyObject *__pyx_pf_7glovepy_11glove_inner_train_glove(CYTHON_UNUSED PyObj
   __pyx_t_7glovepy_11glove_inner_REAL_t __pyx_t_4;
   __Pyx_RefNannySetupContext("train_glove", 0);
 
-  /* "glovepy/glove_inner.pyx":64
+  /* "glovepy/glove_inner.pyx":92
  * 
  * def train_glove(model, jobs, float _step_size, _error):
  *     cdef REAL_t *W              = <REAL_t *>(np.PyArray_DATA(model.W))             # <<<<<<<<<<<<<<
- *     cdef REAL_t *ContextW       = <REAL_t *>(np.PyArray_DATA(model.W_))
+ *     cdef REAL_t *W_             = <REAL_t *>(np.PyArray_DATA(model.W_))
  *     cdef REAL_t *gradsqW        = <REAL_t *>(np.PyArray_DATA(model.gradsqW))
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_W); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_W); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 64, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 92, __pyx_L1_error)
   __pyx_v_W = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/glove_inner.pyx":65
+  /* "glovepy/glove_inner.pyx":93
  * def train_glove(model, jobs, float _step_size, _error):
  *     cdef REAL_t *W              = <REAL_t *>(np.PyArray_DATA(model.W))
- *     cdef REAL_t *ContextW       = <REAL_t *>(np.PyArray_DATA(model.W_))             # <<<<<<<<<<<<<<
+ *     cdef REAL_t *W_             = <REAL_t *>(np.PyArray_DATA(model.W_))             # <<<<<<<<<<<<<<
  *     cdef REAL_t *gradsqW        = <REAL_t *>(np.PyArray_DATA(model.gradsqW))
- *     cdef REAL_t *gradsqContextW = <REAL_t *>(np.PyArray_DATA(model.gradsqW_))
+ *     cdef REAL_t *gradsqW_       = <REAL_t *>(np.PyArray_DATA(model.gradsqW_))
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_W_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_W_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 65, __pyx_L1_error)
-  __pyx_v_ContextW = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_v_W_ = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/glove_inner.pyx":66
+  /* "glovepy/glove_inner.pyx":94
  *     cdef REAL_t *W              = <REAL_t *>(np.PyArray_DATA(model.W))
- *     cdef REAL_t *ContextW       = <REAL_t *>(np.PyArray_DATA(model.W_))
+ *     cdef REAL_t *W_             = <REAL_t *>(np.PyArray_DATA(model.W_))
  *     cdef REAL_t *gradsqW        = <REAL_t *>(np.PyArray_DATA(model.gradsqW))             # <<<<<<<<<<<<<<
- *     cdef REAL_t *gradsqContextW = <REAL_t *>(np.PyArray_DATA(model.gradsqW_))
+ *     cdef REAL_t *gradsqW_       = <REAL_t *>(np.PyArray_DATA(model.gradsqW_))
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_gradsqW); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_gradsqW); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 66, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 94, __pyx_L1_error)
   __pyx_v_gradsqW = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/glove_inner.pyx":67
- *     cdef REAL_t *ContextW       = <REAL_t *>(np.PyArray_DATA(model.W_))
+  /* "glovepy/glove_inner.pyx":95
+ *     cdef REAL_t *W_             = <REAL_t *>(np.PyArray_DATA(model.W_))
  *     cdef REAL_t *gradsqW        = <REAL_t *>(np.PyArray_DATA(model.gradsqW))
- *     cdef REAL_t *gradsqContextW = <REAL_t *>(np.PyArray_DATA(model.gradsqW_))             # <<<<<<<<<<<<<<
+ *     cdef REAL_t *gradsqW_       = <REAL_t *>(np.PyArray_DATA(model.gradsqW_))             # <<<<<<<<<<<<<<
  * 
  *     cdef REAL_t *b              = <REAL_t *>(np.PyArray_DATA(model.b))
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_gradsqW_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_gradsqW_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 67, __pyx_L1_error)
-  __pyx_v_gradsqContextW = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 95, __pyx_L1_error)
+  __pyx_v_gradsqW_ = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/glove_inner.pyx":69
- *     cdef REAL_t *gradsqContextW = <REAL_t *>(np.PyArray_DATA(model.gradsqW_))
+  /* "glovepy/glove_inner.pyx":97
+ *     cdef REAL_t *gradsqW_       = <REAL_t *>(np.PyArray_DATA(model.gradsqW_))
  * 
  *     cdef REAL_t *b              = <REAL_t *>(np.PyArray_DATA(model.b))             # <<<<<<<<<<<<<<
- *     cdef REAL_t *ContextB       = <REAL_t *>(np.PyArray_DATA(model.b_))
+ *     cdef REAL_t *b_             = <REAL_t *>(np.PyArray_DATA(model.b_))
  *     cdef REAL_t *gradsqb        = <REAL_t *>(np.PyArray_DATA(model.gradsqb))
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_b); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_b); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 97, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 69, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 97, __pyx_L1_error)
   __pyx_v_b = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/glove_inner.pyx":70
+  /* "glovepy/glove_inner.pyx":98
  * 
  *     cdef REAL_t *b              = <REAL_t *>(np.PyArray_DATA(model.b))
- *     cdef REAL_t *ContextB       = <REAL_t *>(np.PyArray_DATA(model.b_))             # <<<<<<<<<<<<<<
+ *     cdef REAL_t *b_             = <REAL_t *>(np.PyArray_DATA(model.b_))             # <<<<<<<<<<<<<<
  *     cdef REAL_t *gradsqb        = <REAL_t *>(np.PyArray_DATA(model.gradsqb))
- *     cdef REAL_t *gradsqContextB = <REAL_t *>(np.PyArray_DATA(model.gradsqb_))
+ *     cdef REAL_t *gradsqb_       = <REAL_t *>(np.PyArray_DATA(model.gradsqb_))
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_b_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_b_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 98, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 70, __pyx_L1_error)
-  __pyx_v_ContextB = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 98, __pyx_L1_error)
+  __pyx_v_b_ = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/glove_inner.pyx":71
+  /* "glovepy/glove_inner.pyx":99
  *     cdef REAL_t *b              = <REAL_t *>(np.PyArray_DATA(model.b))
- *     cdef REAL_t *ContextB       = <REAL_t *>(np.PyArray_DATA(model.b_))
+ *     cdef REAL_t *b_             = <REAL_t *>(np.PyArray_DATA(model.b_))
  *     cdef REAL_t *gradsqb        = <REAL_t *>(np.PyArray_DATA(model.gradsqb))             # <<<<<<<<<<<<<<
- *     cdef REAL_t *gradsqContextB = <REAL_t *>(np.PyArray_DATA(model.gradsqb_))
+ *     cdef REAL_t *gradsqb_       = <REAL_t *>(np.PyArray_DATA(model.gradsqb_))
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_gradsqb); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_gradsqb); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 99, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 71, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 99, __pyx_L1_error)
   __pyx_v_gradsqb = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/glove_inner.pyx":72
- *     cdef REAL_t *ContextB       = <REAL_t *>(np.PyArray_DATA(model.b_))
+  /* "glovepy/glove_inner.pyx":100
+ *     cdef REAL_t *b_             = <REAL_t *>(np.PyArray_DATA(model.b_))
  *     cdef REAL_t *gradsqb        = <REAL_t *>(np.PyArray_DATA(model.gradsqb))
- *     cdef REAL_t *gradsqContextB = <REAL_t *>(np.PyArray_DATA(model.gradsqb_))             # <<<<<<<<<<<<<<
+ *     cdef REAL_t *gradsqb_       = <REAL_t *>(np.PyArray_DATA(model.gradsqb_))             # <<<<<<<<<<<<<<
  * 
  *     cdef REAL_t *error          = <REAL_t *>(np.PyArray_DATA(_error))
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_gradsqb_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_gradsqb_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 100, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 72, __pyx_L1_error)
-  __pyx_v_gradsqContextB = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 100, __pyx_L1_error)
+  __pyx_v_gradsqb_ = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/glove_inner.pyx":74
- *     cdef REAL_t *gradsqContextB = <REAL_t *>(np.PyArray_DATA(model.gradsqb_))
+  /* "glovepy/glove_inner.pyx":102
+ *     cdef REAL_t *gradsqb_       = <REAL_t *>(np.PyArray_DATA(model.gradsqb_))
  * 
  *     cdef REAL_t *error          = <REAL_t *>(np.PyArray_DATA(_error))             # <<<<<<<<<<<<<<
  * 
  *     cdef INT_t  *job_key        = <INT_t  *>(np.PyArray_DATA(jobs[0]))
  */
-  if (!(likely(((__pyx_v__error) == Py_None) || likely(__Pyx_TypeTest(__pyx_v__error, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 74, __pyx_L1_error)
+  if (!(likely(((__pyx_v__error) == Py_None) || likely(__Pyx_TypeTest(__pyx_v__error, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 102, __pyx_L1_error)
   __pyx_v_error = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_v__error)));
 
-  /* "glovepy/glove_inner.pyx":76
+  /* "glovepy/glove_inner.pyx":104
  *     cdef REAL_t *error          = <REAL_t *>(np.PyArray_DATA(_error))
  * 
  *     cdef INT_t  *job_key        = <INT_t  *>(np.PyArray_DATA(jobs[0]))             # <<<<<<<<<<<<<<
  *     cdef INT_t  *job_subkey     = <INT_t  *>(np.PyArray_DATA(jobs[1]))
  *     cdef REAL_t *job_target     = <REAL_t *>(np.PyArray_DATA(jobs[2]))
  */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_jobs, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_jobs, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 104, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 76, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 104, __pyx_L1_error)
   __pyx_v_job_key = ((__pyx_t_7glovepy_11glove_inner_INT_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/glove_inner.pyx":77
+  /* "glovepy/glove_inner.pyx":105
  * 
  *     cdef INT_t  *job_key        = <INT_t  *>(np.PyArray_DATA(jobs[0]))
  *     cdef INT_t  *job_subkey     = <INT_t  *>(np.PyArray_DATA(jobs[1]))             # <<<<<<<<<<<<<<
  *     cdef REAL_t *job_target     = <REAL_t *>(np.PyArray_DATA(jobs[2]))
  * 
  */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_jobs, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_jobs, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 77, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 105, __pyx_L1_error)
   __pyx_v_job_subkey = ((__pyx_t_7glovepy_11glove_inner_INT_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/glove_inner.pyx":78
+  /* "glovepy/glove_inner.pyx":106
  *     cdef INT_t  *job_key        = <INT_t  *>(np.PyArray_DATA(jobs[0]))
  *     cdef INT_t  *job_subkey     = <INT_t  *>(np.PyArray_DATA(jobs[1]))
  *     cdef REAL_t *job_target     = <REAL_t *>(np.PyArray_DATA(jobs[2]))             # <<<<<<<<<<<<<<
  * 
  *     # configuration and parameters
  */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_jobs, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_jobs, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 78, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 106, __pyx_L1_error)
   __pyx_v_job_target = ((__pyx_t_7glovepy_11glove_inner_REAL_t *)PyArray_DATA(((PyArrayObject *)__pyx_t_1)));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/glove_inner.pyx":81
+  /* "glovepy/glove_inner.pyx":109
  * 
  *     # configuration and parameters
  *     cdef REAL_t step_size = _step_size             # <<<<<<<<<<<<<<
- *     cdef int vector_size = model.d
- *     cdef int batch_size = len(jobs[0])
+ *     cdef int vector_size  = model.d
+ *     cdef int batch_size   = len(jobs[0])
  */
   __pyx_v_step_size = __pyx_v__step_size;
 
-  /* "glovepy/glove_inner.pyx":82
+  /* "glovepy/glove_inner.pyx":110
  *     # configuration and parameters
  *     cdef REAL_t step_size = _step_size
- *     cdef int vector_size = model.d             # <<<<<<<<<<<<<<
- *     cdef int batch_size = len(jobs[0])
- *     cdef REAL_t x_max   = model.x_max
+ *     cdef int vector_size  = model.d             # <<<<<<<<<<<<<<
+ *     cdef int batch_size   = len(jobs[0])
+ *     cdef REAL_t x_max     = model.x_max
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_d); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_d); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 110, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 82, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 110, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_vector_size = __pyx_t_2;
 
-  /* "glovepy/glove_inner.pyx":83
+  /* "glovepy/glove_inner.pyx":111
  *     cdef REAL_t step_size = _step_size
- *     cdef int vector_size = model.d
- *     cdef int batch_size = len(jobs[0])             # <<<<<<<<<<<<<<
- *     cdef REAL_t x_max   = model.x_max
- *     cdef REAL_t alpha   = model.alpha
+ *     cdef int vector_size  = model.d
+ *     cdef int batch_size   = len(jobs[0])             # <<<<<<<<<<<<<<
+ *     cdef REAL_t x_max     = model.x_max
+ *     cdef REAL_t alpha     = model.alpha
  */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_jobs, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_jobs, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 111, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_3 == -1)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_3 = PyObject_Length(__pyx_t_1); if (unlikely(__pyx_t_3 == -1)) __PYX_ERR(0, 111, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_batch_size = __pyx_t_3;
 
-  /* "glovepy/glove_inner.pyx":84
- *     cdef int vector_size = model.d
- *     cdef int batch_size = len(jobs[0])
- *     cdef REAL_t x_max   = model.x_max             # <<<<<<<<<<<<<<
- *     cdef REAL_t alpha   = model.alpha
+  /* "glovepy/glove_inner.pyx":112
+ *     cdef int vector_size  = model.d
+ *     cdef int batch_size   = len(jobs[0])
+ *     cdef REAL_t x_max     = model.x_max             # <<<<<<<<<<<<<<
+ *     cdef REAL_t alpha     = model.alpha
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_x_max); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_x_max); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 112, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_4 == ((npy_float64)-1)) && PyErr_Occurred())) __PYX_ERR(0, 84, __pyx_L1_error)
+  __pyx_t_4 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_4 == ((npy_float64)-1)) && PyErr_Occurred())) __PYX_ERR(0, 112, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_x_max = __pyx_t_4;
 
-  /* "glovepy/glove_inner.pyx":85
- *     cdef int batch_size = len(jobs[0])
- *     cdef REAL_t x_max   = model.x_max
- *     cdef REAL_t alpha   = model.alpha             # <<<<<<<<<<<<<<
+  /* "glovepy/glove_inner.pyx":113
+ *     cdef int batch_size   = len(jobs[0])
+ *     cdef REAL_t x_max     = model.x_max
+ *     cdef REAL_t alpha     = model.alpha             # <<<<<<<<<<<<<<
  * 
  *     # release GIL & train on the sentence
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_alpha); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 85, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_model, __pyx_n_s_alpha); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_4 == ((npy_float64)-1)) && PyErr_Occurred())) __PYX_ERR(0, 85, __pyx_L1_error)
+  __pyx_t_4 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_4 == ((npy_float64)-1)) && PyErr_Occurred())) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_alpha = __pyx_t_4;
 
-  /* "glovepy/glove_inner.pyx":88
+  /* "glovepy/glove_inner.pyx":116
  * 
  *     # release GIL & train on the sentence
  *     with nogil:             # <<<<<<<<<<<<<<
@@ -2163,17 +2347,17 @@ static PyObject *__pyx_pf_7glovepy_11glove_inner_train_glove(CYTHON_UNUSED PyObj
       #endif
       /*try:*/ {
 
-        /* "glovepy/glove_inner.pyx":89
+        /* "glovepy/glove_inner.pyx":117
  *     # release GIL & train on the sentence
  *     with nogil:
  *         train_glove_thread(             # <<<<<<<<<<<<<<
  *             W,\
- *             ContextW,\
+ *             W_,\
  */
-        __pyx_f_7glovepy_11glove_inner_train_glove_thread(__pyx_v_W, __pyx_v_ContextW, __pyx_v_gradsqW, __pyx_v_gradsqContextW, __pyx_v_b, __pyx_v_ContextB, __pyx_v_gradsqb, __pyx_v_gradsqContextB, __pyx_v_error, __pyx_v_job_key, __pyx_v_job_subkey, __pyx_v_job_target, __pyx_v_vector_size, __pyx_v_batch_size, __pyx_v_x_max, __pyx_v_alpha, __pyx_v_step_size);
+        __pyx_f_7glovepy_11glove_inner_train_glove_thread(__pyx_v_W, __pyx_v_W_, __pyx_v_gradsqW, __pyx_v_gradsqW_, __pyx_v_b, __pyx_v_b_, __pyx_v_gradsqb, __pyx_v_gradsqb_, __pyx_v_error, __pyx_v_job_key, __pyx_v_job_subkey, __pyx_v_job_target, __pyx_v_vector_size, __pyx_v_batch_size, __pyx_v_x_max, __pyx_v_alpha, __pyx_v_step_size);
       }
 
-      /* "glovepy/glove_inner.pyx":88
+      /* "glovepy/glove_inner.pyx":116
  * 
  *     # release GIL & train on the sentence
  *     with nogil:             # <<<<<<<<<<<<<<
@@ -2192,12 +2376,12 @@ static PyObject *__pyx_pf_7glovepy_11glove_inner_train_glove(CYTHON_UNUSED PyObj
       }
   }
 
-  /* "glovepy/glove_inner.pyx":63
+  /* "glovepy/glove_inner.pyx":91
  * 
  * 
  * def train_glove(model, jobs, float _step_size, _error):             # <<<<<<<<<<<<<<
  *     cdef REAL_t *W              = <REAL_t *>(np.PyArray_DATA(model.W))
- *     cdef REAL_t *ContextW       = <REAL_t *>(np.PyArray_DATA(model.W_))
+ *     cdef REAL_t *W_             = <REAL_t *>(np.PyArray_DATA(model.W_))
  */
 
   /* function exit code */
@@ -4750,8 +4934,6 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_n_s_ContextB, __pyx_k_ContextB, sizeof(__pyx_k_ContextB), 0, 0, 1, 1},
-  {&__pyx_n_s_ContextW, __pyx_k_ContextW, sizeof(__pyx_k_ContextW), 0, 0, 1, 1},
   {&__pyx_kp_u_Format_string_allocated_too_shor, __pyx_k_Format_string_allocated_too_shor, sizeof(__pyx_k_Format_string_allocated_too_shor), 0, 1, 0, 0},
   {&__pyx_kp_u_Format_string_allocated_too_shor_2, __pyx_k_Format_string_allocated_too_shor_2, sizeof(__pyx_k_Format_string_allocated_too_shor_2), 0, 1, 0, 0},
   {&__pyx_n_s_ImportError, __pyx_k_ImportError, sizeof(__pyx_k_ImportError), 0, 0, 1, 1},
@@ -4770,8 +4952,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_error_2, __pyx_k_error_2, sizeof(__pyx_k_error_2), 0, 0, 1, 1},
   {&__pyx_n_s_glovepy_glove_inner, __pyx_k_glovepy_glove_inner, sizeof(__pyx_k_glovepy_glove_inner), 0, 0, 1, 1},
   {&__pyx_kp_s_glovepy_glove_inner_pyx, __pyx_k_glovepy_glove_inner_pyx, sizeof(__pyx_k_glovepy_glove_inner_pyx), 0, 0, 1, 0},
-  {&__pyx_n_s_gradsqContextB, __pyx_k_gradsqContextB, sizeof(__pyx_k_gradsqContextB), 0, 0, 1, 1},
-  {&__pyx_n_s_gradsqContextW, __pyx_k_gradsqContextW, sizeof(__pyx_k_gradsqContextW), 0, 0, 1, 1},
   {&__pyx_n_s_gradsqW, __pyx_k_gradsqW, sizeof(__pyx_k_gradsqW), 0, 0, 1, 1},
   {&__pyx_n_s_gradsqW_2, __pyx_k_gradsqW_2, sizeof(__pyx_k_gradsqW_2), 0, 0, 1, 1},
   {&__pyx_n_s_gradsqb, __pyx_k_gradsqb, sizeof(__pyx_k_gradsqb), 0, 0, 1, 1},
@@ -4800,7 +4980,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 29, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 30, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 218, __pyx_L1_error)
   __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) __PYX_ERR(1, 799, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(1, 989, __pyx_L1_error)
@@ -4910,17 +5090,17 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__9);
   __Pyx_GIVEREF(__pyx_tuple__9);
 
-  /* "glovepy/glove_inner.pyx":63
+  /* "glovepy/glove_inner.pyx":91
  * 
  * 
  * def train_glove(model, jobs, float _step_size, _error):             # <<<<<<<<<<<<<<
  *     cdef REAL_t *W              = <REAL_t *>(np.PyArray_DATA(model.W))
- *     cdef REAL_t *ContextW       = <REAL_t *>(np.PyArray_DATA(model.W_))
+ *     cdef REAL_t *W_             = <REAL_t *>(np.PyArray_DATA(model.W_))
  */
-  __pyx_tuple__10 = PyTuple_Pack(21, __pyx_n_s_model, __pyx_n_s_jobs, __pyx_n_s_step_size, __pyx_n_s_error, __pyx_n_s_W, __pyx_n_s_ContextW, __pyx_n_s_gradsqW, __pyx_n_s_gradsqContextW, __pyx_n_s_b, __pyx_n_s_ContextB, __pyx_n_s_gradsqb, __pyx_n_s_gradsqContextB, __pyx_n_s_error_2, __pyx_n_s_job_key, __pyx_n_s_job_subkey, __pyx_n_s_job_target, __pyx_n_s_step_size_2, __pyx_n_s_vector_size, __pyx_n_s_batch_size, __pyx_n_s_x_max, __pyx_n_s_alpha); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_tuple__10 = PyTuple_Pack(21, __pyx_n_s_model, __pyx_n_s_jobs, __pyx_n_s_step_size, __pyx_n_s_error, __pyx_n_s_W, __pyx_n_s_W_2, __pyx_n_s_gradsqW, __pyx_n_s_gradsqW_2, __pyx_n_s_b, __pyx_n_s_b_2, __pyx_n_s_gradsqb, __pyx_n_s_gradsqb_2, __pyx_n_s_error_2, __pyx_n_s_job_key, __pyx_n_s_job_subkey, __pyx_n_s_job_target, __pyx_n_s_step_size_2, __pyx_n_s_vector_size, __pyx_n_s_batch_size, __pyx_n_s_x_max, __pyx_n_s_alpha); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 91, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__10);
   __Pyx_GIVEREF(__pyx_tuple__10);
-  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(4, 0, 21, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_glovepy_glove_inner_pyx, __pyx_n_s_train_glove, 63, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(4, 0, 21, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_glovepy_glove_inner_pyx, __pyx_n_s_train_glove, 91, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) __PYX_ERR(0, 91, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -5052,16 +5232,16 @@ PyMODINIT_FUNC PyInit_glove_inner(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "glovepy/glove_inner.pyx":63
+  /* "glovepy/glove_inner.pyx":91
  * 
  * 
  * def train_glove(model, jobs, float _step_size, _error):             # <<<<<<<<<<<<<<
  *     cdef REAL_t *W              = <REAL_t *>(np.PyArray_DATA(model.W))
- *     cdef REAL_t *ContextW       = <REAL_t *>(np.PyArray_DATA(model.W_))
+ *     cdef REAL_t *W_             = <REAL_t *>(np.PyArray_DATA(model.W_))
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_7glovepy_11glove_inner_1train_glove, NULL, __pyx_n_s_glovepy_glove_inner); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_7glovepy_11glove_inner_1train_glove, NULL, __pyx_n_s_glovepy_glove_inner); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 91, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_train_glove, __pyx_t_1) < 0) __PYX_ERR(0, 63, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_train_glove, __pyx_t_1) < 0) __PYX_ERR(0, 91, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "glovepy/glove_inner.pyx":1

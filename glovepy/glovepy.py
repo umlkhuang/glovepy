@@ -12,6 +12,7 @@ import pyximport
 pyximport.install(setup_args={"include_dirs": np.get_include()})
 
 from multiprocessing import Queue, Lock, cpu_count
+from collections import OrderedDict
 from .glove_inner import train_glove
 
 
@@ -48,7 +49,7 @@ class Glove(object):
         self.word_vectors    = None
 
 
-    def train(self, step_size=0.05, workers = 1, batch_size=100):
+    def train(self, step_size=0.05, workers=1, batch_size=100):
         """
         One epoch run to fit the word embedding matrix.
         """
@@ -129,6 +130,7 @@ class Glove(object):
         for thread in workers_threads:
             thread.join()
 
+        logger.info("Total Error = %.4f" % total_error[0])
         return total_error[0] / num_examples
 
 
@@ -148,9 +150,9 @@ class Glove(object):
 
         if hasattr(self.word2id, 'iteritems'):
             # Python 2 compat
-            items_iterator = self.dictionary.iteritems()
+            items_iterator = dictionary.iteritems()
         else:
-            items_iterator = self.dictionary.items()
+            items_iterator = dictionary.items()
         self.id2word = {v: k for k, v in items_iterator}
         logger.debug("Added id-to-word dictionary")
 
@@ -169,15 +171,19 @@ class Glove(object):
 
         if self.cooccurence is None:
             raise Exception('Model must be provided a cooccurence matrix')
-            
+        
+        errors = []
+
         for epoch in range(epochs):
             err = self.train(step_size=step_size, workers=use_cores, batch_size=batch_size)
-            logger.info("Epoch %d, error %.4f" % (epoch, err))
+            errors.append(err)
+            logger.info("Epoch %d, average error %.4f" % (epoch, err))
         
         self.word_vectors = self.W
+        return errors
 
 
-    def get_norm(word_vec, ord=2):
+    def get_norm(self, word_vec, ord=2):
         """
         Get the norm of the word vectors
         """
@@ -239,6 +245,7 @@ class Glove(object):
 
         with open(filename, 'rb') as savefile:
             instance.__dict__ = pickle.load(savefile)
+        return instance
         
 
     def unitvec(self, vec):
@@ -303,8 +310,8 @@ class Glove(object):
         for word, weight in positive + negative:
             if isinstance(word, np.ndarray):
                 mean.append(weight * word)
-            elif word in model.word2id:
-                word_index = model.word2id[word]
+            elif word in self.word2id:
+                word_index = self.word2id[word]
                 mean.append(weight * word_vec[word_index])
                 all_words.add(word_index)
             else:
@@ -325,7 +332,7 @@ class Glove(object):
         best = np.argsort(dists)[::-1][:topn + len(all_words)]
 
         # ignore (don't return) words from the input
-        result = [(model.id2word[sim], float(dists[sim])) for sim in best if sim not in all_words][:topn]
+        result = [(self.id2word[sim], float(dists[sim])) for sim in best if sim not in all_words][:topn]
         return OrderedDict(result)
 
 
@@ -393,7 +400,7 @@ class Glove(object):
         # Add more candidates in case the input words were in the results
         best = np.argsort(dists)[::-1][:topn + len(all_words)]
         # ignore (don't return) words from the input
-        result = [(model.id2word[sim], float(dists[sim])) for sim in best if sim not in all_words][:topn]
+        result = [(self.id2word[sim], float(dists[sim])) for sim in best if sim not in all_words][:topn]
         return OrderedDict(result)
 
 

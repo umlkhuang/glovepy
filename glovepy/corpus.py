@@ -31,6 +31,7 @@ class Corpus(object):
             self.dictionary = dictionary
             self.dictionary_supplied = True
 
+
     def _check_dict(self, dictionary):
 
         if (np.max(list(dictionary.values())) != (len(dictionary) - 1)):
@@ -40,7 +41,8 @@ class Corpus(object):
         if np.min(list(dictionary.values())) != 0:
             raise Exception('Dictionary ids should start at zero')
 
-    def fit(self, corpus, window=10, ignore_missing=False):
+
+    def fit(self, corpus, window=10, ignore_missing=False, symmetric=True):
         """
         Perform a pass through the corpus to construct
         the cooccurrence matrix.
@@ -55,24 +57,27 @@ class Corpus(object):
                                even if out-of-vocabulary words are
                                ignored.
                                If False, a KeyError is raised.
+        - bool symmetric: whether to get the context from both sides.
+                          If False, only the left side context is considered.
         """
 
         self.matrix = construct_cooccurrence_matrix(corpus,
                                                     self.dictionary,
                                                     int(self.dictionary_supplied),
                                                     int(window),
-                                                    int(ignore_missing))
+                                                    int(ignore_missing),
+                                                    int(symmetric))
+
 
     def save(self, filename):
-
         with open(filename, 'wb') as savefile:
             pickle.dump((self.dictionary, self.matrix),
                         savefile,
                         protocol=pickle.HIGHEST_PROTOCOL)
 
+
     @classmethod
     def load(cls, filename):
-
         instance = cls()
 
         with open(filename, 'rb') as savefile:

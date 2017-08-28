@@ -70,7 +70,8 @@ def define_extensions(cythonize=False):
                       extra_link_args=["-fopenmp"],
                       extra_compile_args=compile_args),
             Extension("glovepy.corpus_cython", [glovepy_corpus],
-                      language='C++',
+                      language='c++',
+                      libraries=["stdc++"],
                       extra_link_args=compile_args,
                       extra_compile_args=compile_args)]
     
@@ -89,7 +90,7 @@ setup(
     download_url='https://github.com/umlkhuang/glovepy',
     keywords='NLP, Machine Learning',
     license='MIT',
-    platforms='any',
+    platforms='linux',
     zip_safe=False,
     classifiers=[
         'Intended Audience :: Science/Research',
